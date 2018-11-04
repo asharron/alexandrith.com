@@ -25,7 +25,7 @@ SECRET_KEY = '5lcj!8_@m&!ojo9i^jj-sjx#$5=qm$&hksv0ie#b^6fygpk%pw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['alexandrith.com']
 
 
 # Application definition

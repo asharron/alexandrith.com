@@ -6,7 +6,6 @@ function posts(state=[], action){
     switch(action.type) {
         case PULL_POSTS:
             return [...state, ...action.posts]
-            break
         default:
             return state
     }

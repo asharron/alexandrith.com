@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import HtmlToReactParser from 'html-to-react';
 import styled from 'styled-components';
 

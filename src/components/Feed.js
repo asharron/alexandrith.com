@@ -10,7 +10,7 @@ export default class Feed extends Component {
     }
 
     componentWillMount() {
-        fetch('/index.php/wp-json/wp/v2/posts').then((res) => {
+        fetch('http://alexandrith.com:90/index.php/wp-json/wp/v2/posts').then((res) => {
             return res.json();
         }).then((body) => {
             console.log(body);

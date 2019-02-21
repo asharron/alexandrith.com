@@ -19,15 +19,15 @@ const Body = styled.div`
     font-size: 1.2em;
 `;
 
-export default class Post extends Component {
-    render() {
-        return (
-            <Content>
-                <Title>{this.props.title}</Title>
-                <Body>
-                    {htmlParser.parse(this.props.content)}
-                </Body>
-            </Content>
-        );
-    }
+const Post = ({ title, content }) => {
+    return (
+        <Content>
+            <Title>{title}</Title>
+            <Body>
+                {htmlParser.parse(content)}
+            </Body>
+        </Content>
+    );
 }
+
+export default Post;

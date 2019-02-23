@@ -6,7 +6,7 @@ import Post from '../components/Post';
 //Fetch and dispatch blog posts
 //TODO: Pass down to children and make this component be strictly a container
 const queryGrabPosts = (dispatch) => {
-        fetch('https://alexandrith.com:90/index.php/wp-json/wp/v2/posts').then((res) => {
+        fetch('http://alexandrith.com:90/index.php/wp-json/wp/v2/posts').then((res) => {
             return res.json();
         }).then((body) => {
             dispatch(pullPosts(body));

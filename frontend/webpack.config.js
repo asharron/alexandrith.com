@@ -35,6 +35,7 @@ module.exports = {
 				options: {
 					plugins: [
                         'syntax-dynamic-import',
+                        '@babel/plugin-proposal-class-properties'
                     ],
 
 					presets: [

@@ -1,0 +1,11 @@
+@import "../../styles/02-tools/colors";
+
+.common-layout {
+  max-width: 1200px;
+  margin: auto;
+
+  &__content {
+    margin-top: 2rem;
+    text-align: center;
+  }
+}

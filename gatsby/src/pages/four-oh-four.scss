@@ -1,0 +1,14 @@
+.four-oh-four {
+  max-width: 1200px;
+  margin: 2rem auto;
+  text-align: center;
+
+  &__emoji {
+    font-size: 128px;
+    margin-bottom: 2rem;
+  }
+
+  &__title {
+    margin-bottom: 2rem;
+  }
+}

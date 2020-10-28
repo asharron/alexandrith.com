@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 	"github.com/asharron/alexandrith.com/fiber/graph/generated"
-	"github.com/asharron/alexandrith.com/fiber/graph/graph"
+	"github.com/asharron/alexandrith.com/fiber/graph"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 )

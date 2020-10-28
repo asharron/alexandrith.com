@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"time"
 	"github.com/asharron/alexandrith.com/fiber/graph/generated"
+	"github.com/asharron/alexandrith.com/fiber/graph/graph"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 )
@@ -27,7 +28,7 @@ func connectToDatabase() {
 func main() {
     app := fiber.New()
 
-    srv := handler.NewDefaultServer(generated.NewExecutableSchema(gql.NewResolver()))
+    srv := handler.NewDefaultServer(generated.NewExecutableSchema(graph.NewResolver()))
     gqlHandler := srv.Handler()
     playground := playground.Handler("Graqphql playground", "/query")
 

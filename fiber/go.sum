@@ -9,6 +9,8 @@ github.com/andybalholm/brotli v1.0.0 h1:7UCwP93aiSfvWpapti8g88vVVGp2qqtGyePsSuDa
 github.com/andybalholm/brotli v1.0.0/go.mod h1:loMXtMfwqflxFJPmdbJO0a3KNoPuLBgiu3qAvBg8x/Y=
 github.com/arbovm/levenshtein v0.0.0-20160628152529-48b4e1c0c4d0/go.mod h1:t2tdKJDJF9BV14lnkjHmOQgcvEKgtqs5a1N3LNdJhGE=
 github.com/arsmn/gqlgen v0.13.2/go.mod h1:8fP14/dpXCBGBACXFx/n2/l+MshB8jJHA0Vd5PIl+Qo=
+github.com/asharron/alexandrith.com v0.0.0-20201027122531-795a0344d881 h1:nVsUkAuMOVhGlpQSDBBAfFMTOjTmkzeDZBxcLpBD0c0=
+github.com/asharron/alexandrith.com/fiber v0.0.0-20201027122531-795a0344d881 h1:3d6rMGioMZhbrIT1MV/WX4wbdtX4alY1ibBeAjsyNXo=
 github.com/aws/aws-sdk-go v1.34.28 h1:sscPpn/Ns3i0F4HPEWAVcwdIRaZZCuL7llJ2/60yPIk=
 github.com/aws/aws-sdk-go v1.34.28/go.mod h1:H7NKnBqNVzoTJpGfLrQkkD+ytBA93eiDYi/+8rV9s48=
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d h1:U+s90UTSYgptZMwQh2aRr3LuazLJIa+Pg3Kc1ylSYVY=

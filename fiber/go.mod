@@ -1,4 +1,4 @@
-module github.com/asharron/alexandrith.com
+module github.com/asharron/alexandrith.com/fiber
 
 go 1.4
 

@@ -127,7 +127,6 @@ a:focus-visible {
 .footer-brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
   color: var(--color-ink);
   font-size: 16px;
   font-weight: 900;
@@ -508,8 +507,8 @@ a:focus-visible {
 .hero-flower {
   position: absolute;
   z-index: 3;
-  right: 80px;
-  bottom: 0;
+  right: 20px;
+  bottom: 5px;
   transform: scale(0.48);
   transform-origin: bottom right;
 }

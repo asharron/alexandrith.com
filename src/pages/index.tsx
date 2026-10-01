@@ -369,8 +369,6 @@ const IndexPage: React.FC<PageProps> = () => {
                             <PixelSprite src={flowerSprite} frames={1} label="Flower Sprite"
                                          className="hero-flower2"/>
                         </div>
-                        <div className="art-caption"><span>pixel by pixel, polygon by polygon</span><PixelSprite
-                            src={blenderSpinSheet} frames={4} label="Spinning Blender icon" className="blender-sprite"/></div>
                     </div>
                 </section>
 
@@ -381,8 +379,8 @@ const IndexPage: React.FC<PageProps> = () => {
                 <section className="projects-section" id="projects" aria-labelledby="projects-title">
                     <div className="section-heading">
                         <div><p className="section-kicker">THE PROJECT ARCADE <span>✳</span></p>
-                            <h2 id="projects-title">A few things I’ve <em>made.</em></h2></div>
-                        <p className="section-note">Personal projects, prototypes, and worlds built one experiment at a time.</p>
+                            <h2 id="projects-title">A few of my<em> pet projects</em></h2></div>
+                        <p className="section-note">Personal projects &amp; prototypes</p>
                     </div>
                     <div className="project-grid">
                         {projects.map((project, index) => (
@@ -445,8 +443,8 @@ const IndexPage: React.FC<PageProps> = () => {
                     <div className="contact-pixel" aria-hidden="true"><PixelSprite src={playerIdleSheet} frames={4}
                         label="Animated player character"/></div>
                     <div><p className="section-kicker">YOUR TURN <span>✳</span></p>
-                        <h2 id="contact-title">Got a fun idea?</h2>
-                        <p>Come say hi, peek at the code, or take a look at my résumé.</p></div>
+                        <h2 id="contact-title">Still here?</h2>
+                        <p>Say hi, peek at my code, or take a look at my résumé.</p></div>
                     <div className="contact-links">
                         <a href="https://github.com/asharron" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
                         <a href="https://linkedin.com/in/alexandrith" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
@@ -455,7 +453,7 @@ const IndexPage: React.FC<PageProps> = () => {
                 </section>
 
                 <footer className="site-footer"><a className="footer-brand" href="#top">alexandrith<span>.com</span></a>
-                    <span>BUILT WITH PIXELS, POLYGONS &amp; CURIOSITY</span><a href="#top">BACK TO TOP ↑</a></footer>
+                    <a href="#top">BACK TO TOP ↑</a></footer>
             </div>
         </main>
     );

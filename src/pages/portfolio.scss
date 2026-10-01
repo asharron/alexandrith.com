@@ -464,6 +464,42 @@ a:focus-visible {
   bottom: 0;
   transform: scale(0.48);
   transform-origin: bottom right;
+
+  &--2 {
+    right: 240px;
+  }
+
+  &--3 {
+    right: 400px;
+    bottom: 10px;
+  }
+
+  &--4 {
+    right: 180px;
+    bottom: 20px;
+  }
+
+  &--5 {
+    right: 70px;
+  }
+}
+
+.hero-flower {
+  position: absolute;
+  z-index: 3;
+  right: 80px;
+  bottom: 0;
+  transform: scale(0.48);
+  transform-origin: bottom right;
+}
+
+.hero-flower2 {
+  position: absolute;
+  z-index: 3;
+  right: 320px;
+  bottom: 10px;
+  transform: scale(0.48);
+  transform-origin: bottom right;
 }
 
 .hero-zombie-sprite {

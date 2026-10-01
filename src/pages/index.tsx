@@ -269,12 +269,22 @@ const IndexPage: React.FC<PageProps> = () => {
                                 <PixelSprite src={playerWalkingSheet} frames={4} label="Walking player character"
                                              className="hero-player"/>
                             </div>
-                            <PixelSprite src={pixelFireSheet} frames={4} label="Animated pixel fire"
-                                         className="hero-fire"/>
                             <img className="hero-zombie-sprite" src={zombieSprite} alt=""/>
                             <div className="stage-ground" aria-hidden="true"/>
                             <PixelSprite src={grassIdleSheet} frames={2} label="Swaying pixel grass"
                                          className="hero-grass"/>
+                            <PixelSprite src={grassIdleSheet} frames={2} label="Swaying pixel grass"
+                                         className="hero-grass hero-grass--2"/>
+                            <PixelSprite src={grassIdleSheet} frames={2} label="Swaying pixel grass"
+                                         className="hero-grass hero-grass--3"/>
+                            <PixelSprite src={grassIdleSheet} frames={2} label="Swaying pixel grass"
+                                         className="hero-grass hero-grass--4"/>
+                            <PixelSprite src={grassIdleSheet} frames={2} label="Swaying pixel grass"
+                                         className="hero-grass hero-grass--5"/>
+                            <PixelSprite src={flowerSprite} frames={1} label="Flower Sprite"
+                                         className="hero-flower"/>
+                            <PixelSprite src={flowerSprite} frames={1} label="Flower Sprite"
+                                         className="hero-flower2"/>
                             <div className="stage-tag"><span className="tag-dot"/> GO GAME / FIELD 01</div>
                         </div>
                         <div className="art-caption"><span>pixel by pixel, polygon by polygon</span><PixelSprite

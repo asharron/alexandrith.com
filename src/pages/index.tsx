@@ -134,22 +134,22 @@ const pastCompanies = [
     {
         name: "Pearson Education",
         startYear: 2023,
-        endYear: 2026,
+        endYear: 2026
     },
     {
         name: "Red Hat",
         startYear: 2021,
-        endYear: 2023,
+        endYear: 2023
     },
     {
         name: "BlueAcorn ICI",
         startYear: 2019,
-        endYear: 2021,
+        endYear: 2021
     },
     {
         name: "Capgemini",
         startYear: 2018,
-        endYear: 2019,
+        endYear: 2019
     }
 ];
 
@@ -161,7 +161,7 @@ const pastClients = [
         name: "Cox Communications"
     },
     {
-        name: "First Citizens Bank",
+        name: "First Citizens Bank"
     },
     {
         name: "Tractor Supply"
@@ -312,6 +312,8 @@ const IndexPage: React.FC<PageProps> = () => {
                     <nav className="main-nav" aria-label="Main navigation">
                         <a href="#projects">Projects</a>
                         <a href="#about">About</a>
+                        <a href="#technologies">Stack</a>
+                        <a href="#past-companies">Experience</a>
                         <a href="#contact">Contact</a>
                     </nav>
                     <a className="header-link" href="https://github.com/asharron" target="_blank"
@@ -438,6 +440,68 @@ const IndexPage: React.FC<PageProps> = () => {
                             src={flowerSprite} alt=""/></div>
                     </div>
                 </section>
+
+                <div className="portfolio-details" aria-label="Technologies and experience">
+                    <section className="portfolio-detail-card technologies-card" id="technologies"
+                             aria-labelledby="technologies-title">
+                        <div className="detail-card-heading">
+                            <div><p className="section-kicker">THE TOOLKIT <span>✳</span></p>
+                                <h2 id="technologies-title">Technologies</h2>
+                                <p className="detail-card-description">Languages and frameworks I've used on different teams.</p></div>
+                            <span className="detail-card-index">01 / 04</span>
+                        </div>
+                        <ul className="technology-list">
+                            {technologies.map((technology) => (
+                                <li key={technology.name}>
+                                    <div><strong>{technology.name}</strong><span>{technology.type}</span></div>
+                                    <span className="technology-experience">{technology.yearsOfExperience} yrs</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </section>
+
+                    <section className="portfolio-detail-card tools-card" id="favorite-tools"
+                             aria-labelledby="favorite-tools-title">
+                        <div className="detail-card-heading">
+                            <div><p className="section-kicker">DAILY DRIVERS <span>✳</span></p>
+                                <h2 id="favorite-tools-title">Favorite tools</h2>
+                                <p className="detail-card-description">A few trusted tools that are part of my everyday workflow.</p></div>
+                            <span className="detail-card-index">02 / 04</span>
+                        </div>
+                        <ul className="tool-list">
+                            {favoriteTools.map((tool) => <li key={tool.name}><span className="tool-sparkle" aria-hidden="true">✳</span>{tool.name}</li>)}
+                        </ul>
+                    </section>
+
+                    <section className="portfolio-detail-card companies-card" id="past-companies"
+                             aria-labelledby="past-companies-title">
+                        <div className="detail-card-heading">
+                            <div><p className="section-kicker">ON THE TEAM <span>✳</span></p>
+                                <h2 id="past-companies-title">Past companies</h2>
+                                <p className="detail-card-description">Some of the teams and organizations I’ve been employed at.</p></div>
+                            <span className="detail-card-index">03 / 04</span>
+                        </div>
+                        <ul className="company-list">
+                            {pastCompanies.map((company) => (
+                                <li key={company.name}><strong>{company.name}</strong>
+                                    <span>{company.startYear}—{company.endYear}</span></li>
+                            ))}
+                        </ul>
+                    </section>
+
+                    <section className="portfolio-detail-card clients-card" id="past-clients"
+                             aria-labelledby="past-clients-title">
+                        <div className="detail-card-heading">
+                            <div><p className="section-kicker">WORKED WITH <span>✳</span></p>
+                                <h2 id="past-clients-title">Past clients</h2>
+                                <p className="detail-card-description">These are clients I've worked with during my roles at other employers</p></div>
+                            <span className="detail-card-index">04 / 04</span>
+                        </div>
+                        <ul className="client-list">
+                            {pastClients.map((client) => <li key={client.name}>{client.name}</li>)}
+                        </ul>
+                    </section>
+                </div>
 
                 <section className="contact-section" id="contact" aria-labelledby="contact-title">
                     <div className="contact-pixel" aria-hidden="true"><PixelSprite src={playerIdleSheet} frames={4}

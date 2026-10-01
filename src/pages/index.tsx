@@ -1,124 +1,98 @@
 import * as React from "react";
+import { Canvas, useLoader } from "@react-three/fiber";
 import type { HeadFC, PageProps } from "gatsby";
-import './app.scss';
-import * as THREE from "three";
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import {KeyboardEventHandler, useEffect} from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import type { Font } from "three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
+import "./app.scss";
 
-let loadFont = new Promise((resolve, reject) => {
-    new FontLoader().load('/fira.json', (font) => {
+type ExtrudedTextProps = {
+    text: string;
+    font: Font;
+    position?: [number, number, number];
+    center?: boolean;
+};
 
-        resolve(font);
-    });
-});
+const ExtrudedText: React.FC<ExtrudedTextProps> = ({ text, font, position, center = false }) => {
+    const geometry = useMemo(() => {
+        const textGeometry = new TextGeometry(text, {
+            font,
+            size: 1,
+            depth: 0.3,
+            curveSegments: 2,
+            bevelEnabled: true,
+            bevelThickness: 0.03,
+            bevelSize: 0.02,
+            bevelSegments: 3,
+        });
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera();
-camera.position.z = 20;
-camera.position.x = 9;
-camera.position.y = -8;
-const renderer = new THREE.WebGLRenderer();
-camera.aspect = window.innerWidth / window.innerHeight;
-renderer.setSize(window.innerWidth, window.innerHeight);
+        if (center) {
+            textGeometry.center();
+        }
 
-const letterMeshes = [];
+        return textGeometry;
+    }, [center, font, text]);
 
-let xOffset = 0;
-let yOffset = 0;
+    return (
+        <mesh geometry={geometry} position={position}>
+            <meshStandardMaterial color={0xff00ff} />
+        </mesh>
+    );
+};
+
+const TextScene: React.FC<{ characters: string[] }> = ({ characters }) => {
+    const font = useLoader(FontLoader, "/fira.json");
+
+    return (
+        <>
+            <ExtrudedText text="Test" font={font} center />
+            {characters.map((text, index) => (
+                <ExtrudedText
+                    key={index}
+                    text={text}
+                    font={font}
+                    position={[index % 18, -Math.floor(index / 18) * 1.5, 0]}
+                />
+            ))}
+            <directionalLight color={0xffffff} position={[0, 0, 10]} />
+        </>
+    );
+};
 
 const IndexPage: React.FC<PageProps> = () => {
-    useEffect(() => {
-        const mainTag = document.querySelector("main");
-        const childrenCount = mainTag?.children.length ?? 0;
-        for (let childIdx = 0; childIdx< childrenCount; childIdx++) {
-            const child = mainTag?.children[childIdx];
-            if (child) {
-                mainTag?.removeChild(child);
-            }
-        }
-
-        document.querySelector('main')?.appendChild(renderer.domElement);
-        renderer.render(scene, camera);
-
-        loadFont.then((font) => {
-            const geometry = new TextGeometry('Test', {
-                font,
-                size: 1,
-                depth: 0.3,
-                curveSegments: 8,
-                bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
-                bevelSegments: 3,
-            });
-            geometry.center();
-
-            const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color: 0xff00ff}));
-            scene.add(mesh);
-            const light = new THREE.DirectionalLight(0xffffff);
-            light.position.z = 10;
-            scene.add(light);
-            renderer.render(scene, camera);
-        });
-    }, []);
-
-    const onKeyDown = (event: KeyboardEvent) => {
-        if(event.key == 'Backspace') {
-            scene.remove(letterMeshes.pop());
-            renderer.render(scene, camera);
-            xOffset -= 1;
-        }
-
-        if (['Shift', 'Backspace', 'Control', 'Alt'].includes(event.key)) {
-            return;
-        }
-
-        loadFont.then((font) => {
-            const geometry = new TextGeometry(event.key, {
-                font,
-                size: 1,
-                depth: 0.3,
-                curveSegments: 8,
-                bevelEnabled: true,
-                bevelThickness: 0.03,
-                bevelSize: 0.02,
-                bevelSegments: 3,
-            });
-            const mesh = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({color: 0xff00ff}));
-            mesh.position.x = 0;
-            mesh.position.x += xOffset;
-            mesh.position.y = 0;
-            mesh.position.y += yOffset;
-
-            if (mesh.position.x / 18 >= 1) {
-                xOffset = 0;
-                yOffset = yOffset-1.5;
-                mesh.position.x = 0;
-                mesh.position.y -= 1.5;
-            }
-            xOffset += 1;
-            scene.add(mesh);
-            letterMeshes.push(mesh);
-            renderer.render(scene, camera);
-        })
-    }
+    const [characters, setCharacters] = useState<string[]>([]);
 
     useEffect(() => {
-        window.addEventListener('keydown', onKeyDown);
+        const onKeyDown = (event: KeyboardEvent) => {
+            if (event.key === "Backspace") {
+                event.preventDefault();
+                setCharacters((current) => current.slice(0, -1));
+                return;
+            }
 
-        return () => {
-            window.removeEventListener('keydown', onKeyDown);
+            if (["Shift", "Control", "Alt", "Meta"].includes(event.key)) {
+                return;
+            }
+
+            setCharacters((current) => [...current, event.key]);
         };
+
+        window.addEventListener("keydown", onKeyDown);
+        return () => window.removeEventListener("keydown", onKeyDown);
     }, []);
 
+    return (
+        <main className="main">
+            <Canvas camera={{ position: [9, -8, 20], fov: 80 }}>
+                <Suspense fallback={null}>
+                    <TextScene characters={characters} />
+                </Suspense>
+            </Canvas>
+        </main>
+    );
+};
 
-  return (
-    <main className={'main'}>
-    </main>
-  )
-}
+export default IndexPage;
 
-export default IndexPage
-
-export const Head: HeadFC = () => <title>Home Page</title>
+export const Head: HeadFC = () => <title>Home Page</title>;

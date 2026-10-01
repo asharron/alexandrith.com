@@ -152,18 +152,19 @@ type PixelSpriteProps = {
     frames: number;
     label: string;
     className?: string;
+    frameSize?: number;
 };
 
-const PixelSprite: React.FC<PixelSpriteProps> = ({src, frames, label, className = ""}) => (
+const PixelSprite: React.FC<PixelSpriteProps> = ({src, frames, label, className = "", frameSize = 128}) => (
     <span
         className={`pixel-sprite ${className}`}
         role="img"
         aria-label={label}
         style={{
             backgroundImage: `url(${src})`,
-            backgroundSize: `${frames * 128}px 128px`,
+            backgroundSize: `${frames * frameSize}px ${frameSize}px`,
             "--sprite-frames": frames,
-            "--sprite-animation-end": `${frames * -128}px`,
+            "--sprite-animation-end": `${frames * -frameSize}px`,
         } as React.CSSProperties}
     />
 );
@@ -336,10 +337,12 @@ const IndexPage: React.FC<PageProps> = () => {
                             <div><img src={wateringCanSprite} alt=""/><span>GROW</span></div>
                             <div><img src={tomatoSeedSprite} alt=""/><span>PLANT</span></div>
                             <div><img src={watermelonSeedSprite} alt=""/><span>PLAY</span></div>
-                            <div><PixelSprite src={grassIdleSheet} frames={2} label="Animated grass"/><span>REPEAT</span></div>
+                            <div><PixelSprite src={grassIdleSheet} frames={2} label="Animated grass"
+                                              frameSize={48}/><span>REPEAT</span></div>
                         </div>
                         <div className="about-art-bottom"><PixelSprite src={pixelFireSheet} frames={4}
-                            label="Animated pixel fire"/><span>MADE WITH<br/>A LITTLE MAGIC</span><img src={flowerSprite} alt=""/></div>
+                            label="Animated pixel fire" frameSize={54}/><span>MADE WITH<br/>A LITTLE MAGIC</span><img
+                            src={flowerSprite} alt=""/></div>
                     </div>
                 </section>
 

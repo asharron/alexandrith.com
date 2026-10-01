@@ -107,10 +107,10 @@ const fragmentShader = `
         float grid = 1.0 - smoothstep(0.475, 0.5, min(gridPoint.x, gridPoint.y));
         float vignette = 1.0 - smoothstep(0.22, 1.0, length(point * vec2(0.8, 1.0)));
 
-        vec3 color = vec3(0.018, 0.027, 0.039);
-        color += vec3(0.02, 0.24, 0.22) * grid * 0.16;
-        color += vec3(0.10, 0.88, 0.68) * (firstGlow * 0.18 + firstLine * 0.48);
-        color += vec3(0.40, 0.23, 0.82) * (secondGlow * 0.13 + secondLine * 0.22);
+        vec3 color = vec3(0.114, 0.169, 0.325);
+        color += vec3(0.0, 0.529, 0.318) * grid * 0.16;
+        color += vec3(1.0, 0.0, 0.302) * (firstGlow * 0.18 + firstLine * 0.48);
+        color += vec3(1.0, 0.925, 0.153) * (secondGlow * 0.13 + secondLine * 0.22);
         color *= 0.58 + vignette * 0.42;
 
         gl_FragColor = vec4(color, 1.0);
@@ -258,7 +258,7 @@ const IndexPage: React.FC<PageProps> = () => {
                                         dpr={[1, 1.5]} gl={{alpha: true, antialias: true}}>
                                     <ambientLight intensity={1.6}/>
                                     <directionalLight position={[3, 4, 4]} intensity={2.4}/>
-                                    <pointLight position={[-3, 1, 2]} intensity={1.2} color="#ff88cf"/>
+                                    <pointLight position={[-3, 1, 2]} intensity={1.2} color="#FF77A8"/>
                                     <Suspense fallback={null}>
                                         <FloatingModel src={zombieModel}/>
                                         <FloatingModel src={potionModel} position={[0.78, -0.38, 0.1]} targetSize={0.42}/>

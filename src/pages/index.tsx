@@ -49,7 +49,7 @@ const ExtrudedText: React.FC<ExtrudedTextProps> = ({ text, font, position, rotat
 
     useFrame(({ clock }) => {
         if (mesh.current && rotationPhase !== undefined) {
-            mesh.current.rotation.y = Math.sin(clock.elapsedTime * 2 + rotationPhase) * (Math.PI / 12);
+            mesh.current.rotation.y = Math.sin(clock.elapsedTime * 2 + rotationPhase) * (Math.PI / 18);
         }
     });
 

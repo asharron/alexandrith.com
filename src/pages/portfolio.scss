@@ -504,13 +504,20 @@ a:focus-visible {
 
 .hero-zombie-sprite {
   position: absolute;
-  z-index: 3;
-  top: 66px;
+  z-index: 2;
+  bottom: 70px;
   left: 19%;
   width: 48px;
   height: 48px;
   image-rendering: pixelated;
   transform: rotate(-8deg);
+
+  &--2 {
+    bottom: 50px;
+    right: 0;
+    left: auto;
+    transform: rotateY(180deg) rotateZ(-20deg);
+  }
 }
 
 .stage-tag {

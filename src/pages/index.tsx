@@ -269,7 +269,10 @@ const IndexPage: React.FC<PageProps> = () => {
                                 <PixelSprite src={playerWalkingSheet} frames={4} label="Walking player character"
                                              className="hero-player"/>
                             </div>
+
                             <img className="hero-zombie-sprite" src={zombieSprite} alt=""/>
+                            <img className="hero-zombie-sprite hero-zombie-sprite--2" src={zombieSprite} alt=""/>
+
                             <div className="stage-ground" aria-hidden="true"/>
                             <PixelSprite src={grassIdleSheet} frames={2} label="Swaying pixel grass"
                                          className="hero-grass"/>

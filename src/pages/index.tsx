@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import type { HeadFC, PageProps } from "gatsby";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ShaderMaterial, Vector2 } from "three";
+import {Canvas, useFrame, useThree} from "@react-three/fiber";
+import type {HeadFC, PageProps} from "gatsby";
+import {useEffect, useMemo, useRef, useState} from "react";
+import {ShaderMaterial, Vector2} from "three";
 import "./app.scss";
 
 type PortfolioProject = {
@@ -88,15 +88,15 @@ const ShaderBackground: React.FC = () => {
     const viewport = useThree((state) => state.viewport);
     const size = useThree((state) => state.size);
     const uniforms = useMemo(() => ({
-        uTime: { value: 0 },
-        uResolution: { value: new Vector2(size.width, size.height) },
+        uTime: {value: 0},
+        uResolution: {value: new Vector2(size.width, size.height)},
     }), []);
 
     useEffect(() => {
         uniforms.uResolution.value.set(size.width, size.height);
     }, [size.height, size.width, uniforms]);
 
-    useFrame(({ clock }) => {
+    useFrame(({clock}) => {
         if (material.current) {
             material.current.uniforms.uTime.value = clock.elapsedTime;
         }
@@ -104,7 +104,7 @@ const ShaderBackground: React.FC = () => {
 
     return (
         <mesh scale={[viewport.width / 2, viewport.height / 2, 1]}>
-            <planeGeometry args={[2, 2]} />
+            <planeGeometry args={[2, 2]}/>
             <shaderMaterial
                 ref={material}
                 uniforms={uniforms}
@@ -115,48 +115,64 @@ const ShaderBackground: React.FC = () => {
     );
 };
 
+const runHelpCommand = () => {
+    return {
+        output: [
+            "Available commands:",
+            "  help                  Show this command reference",
+            "  resume                Open the resume in a new tab",
+            "  projects              List the example projects",
+            "  project <name>        View a project by its name",
+            "Try: project mesh-field",
+        ],
+    };
+}
+
+const runResumeCommand = () => {
+    return {
+        output: ["Opening the resume in a new tab…"],
+        openedResume: true,
+    };
+}
+
+const runProjectsCommand = () => {
+    return {
+        output: ["Example projects — run `project <name>` to inspect one:"],
+        listProjects: true,
+    };
+}
+
+const runProjectCommand = (projectName: string, ...args: any[]) => {
+    const project = projects.find((item) => item.slug === projectName);
+
+    if (project) {
+        return {output: [], project};
+    }
+
+    return {
+        output: [`No project found for "${args.join(" ")}". Run projects to see the available names.`],
+    };
+}
+
 const getCommandResult = (command: string): Omit<TerminalEntry, "id" | "command"> => {
     const [action, ...args] = command.trim().split(/\s+/);
     const normalizedAction = action.toLowerCase();
     const projectName = args.join("-").toLowerCase();
 
     if (normalizedAction === "help") {
-        return {
-            output: [
-                "Available commands:",
-                "  help                  Show this command reference",
-                "  resume                Open the resume in a new tab",
-                "  projects              List the example projects",
-                "  project <name>        View a project by its name",
-                "Try: project mesh-field",
-            ],
-        };
+        return runHelpCommand();
     }
 
     if (normalizedAction === "resume") {
-        return {
-            output: ["Opening the resume in a new tab…"],
-            openedResume: true,
-        };
+        return runResumeCommand();
     }
 
     if (normalizedAction === "projects" && args.length === 0) {
-        return {
-            output: ["Example projects — run `project <name>` to inspect one:"],
-            listProjects: true,
-        };
+        return runProjectsCommand();
     }
 
-    if (normalizedAction === "project" || normalizedAction === "projects") {
-        const project = projects.find((item) => item.slug === projectName || item.name.toLowerCase() === args.join(" ").toLowerCase());
-
-        if (project) {
-            return { output: [], project };
-        }
-
-        return {
-            output: [`No project found for "${args.join(" ")}". Run projects to see the available names.`],
-        };
+    if (normalizedAction === "project") {
+        return runProjectCommand(projectName, args);
     }
 
     return {
@@ -174,7 +190,7 @@ const IndexPage: React.FC<PageProps> = () => {
     const nextEntryId = useRef(0);
 
     useEffect(() => {
-        outputEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        outputEndRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
     }, [entries]);
 
     const runCommand = (rawCommand: string) => {
@@ -190,7 +206,7 @@ const IndexPage: React.FC<PageProps> = () => {
 
         commandHistory.current.push(command);
         historyIndex.current = commandHistory.current.length;
-        setEntries((current) => [...current, { id: nextEntryId.current++, command, ...result }]);
+        setEntries((current) => [...current, {id: nextEntryId.current++, command, ...result}]);
         setInput("");
     };
 
@@ -214,45 +230,51 @@ const IndexPage: React.FC<PageProps> = () => {
     return (
         <main className="portfolio-shell">
             <div className="shader-canvas" aria-hidden="true">
-                <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 1 }} dpr={[1, 1.5]}>
-                    <ShaderBackground />
+                <Canvas orthographic camera={{position: [0, 0, 1], zoom: 1}} dpr={[1, 1.5]}>
+                    <ShaderBackground/>
                 </Canvas>
             </div>
 
             <section className="terminal-window" aria-labelledby="portfolio-title">
                 <header className="terminal-topbar">
                     <div className="window-controls" aria-hidden="true">
-                        <span className="window-control window-control-red" />
-                        <span className="window-control window-control-yellow" />
-                        <span className="window-control window-control-green" />
+                        <span className="window-control window-control-red"/>
+                        <span className="window-control window-control-yellow"/>
+                        <span className="window-control window-control-green"/>
                     </div>
                     <span className="terminal-title">alexandrith.com — portfolio</span>
-                    <span className="topbar-status"><span /> ONLINE</span>
                 </header>
 
                 <div className="terminal-content">
                     <section className="welcome-block">
-                        <div className="eyebrow"><span>//</span> INTERACTIVE PORTFOLIO <span className="eyebrow-divider">/</span> MESH SHADER MODE</div>
+                        <div className="eyebrow"><span>//</span> INTERACTIVE PORTFOLIO
+                        </div>
                         <h1 id="portfolio-title">alexandrith<span>.com</span></h1>
-                        <p className="welcome-copy">Creative development, realtime graphics, and experiments at the edge of the browser.</p>
+                        <p className="welcome-copy">Personal portfolio for Alexandrith Sharron</p>
                         <div className="system-meta">
-                            <span><i /> SYSTEM READY</span>
                             <span>TYPE <strong>help</strong> TO BEGIN</span>
                         </div>
                     </section>
 
                     <section className="terminal-log" aria-label="Command output" aria-live="polite">
                         <div className="welcome-output">
-                            <div className="prompt-line"><span className="prompt-user">guest@alexandrith</span><span className="prompt-colon">:</span><span className="prompt-path">~</span><span className="prompt-dollar">$</span><span>help</span></div>
-                            <p className="output-line">Welcome. Enter a command below, or type <code>help</code> to see what is available.</p>
+                            <div className="prompt-line"><span className="prompt-user">guest@alexandrith</span><span
+                                className="prompt-colon">:</span><span className="prompt-path">~</span><span
+                                className="prompt-dollar">$</span><span>help</span></div>
+                            <p className="output-line">Welcome. Enter a command below, or type <code>help</code> to see
+                                what is available.</p>
                         </div>
                         {entries.map((entry) => (
                             <div className="command-entry" key={entry.id}>
-                                <div className="prompt-line"><span className="prompt-user">guest@alexandrith</span><span className="prompt-colon">:</span><span className="prompt-path">~</span><span className="prompt-dollar">$</span><span>{entry.command}</span></div>
+                                <div className="prompt-line"><span className="prompt-user">guest@alexandrith</span><span
+                                    className="prompt-colon">:</span><span className="prompt-path">~</span><span
+                                    className="prompt-dollar">$</span><span>{entry.command}</span></div>
                                 <div className="command-output">
-                                    {entry.output.map((line, index) => <p className="output-line" key={index}>{line}</p>)}
+                                    {entry.output.map((line, index) => <p className="output-line"
+                                                                          key={index}>{line}</p>)}
                                     {entry.openedResume && (
-                                        <a className="resume-link" href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+                                        <a className="resume-link" href="/resume.pdf" target="_blank"
+                                           rel="noopener noreferrer">
                                             Open resume.pdf <span aria-hidden="true">↗</span>
                                         </a>
                                     )}
@@ -267,20 +289,25 @@ const IndexPage: React.FC<PageProps> = () => {
                                     )}
                                     {entry.project && (
                                         <div className="project-detail">
-                                            <div className="project-detail-heading"><span>PROJECT</span><code>{entry.project.slug}</code></div>
+                                            <div className="project-detail-heading">
+                                                <span>PROJECT</span><code>{entry.project.slug}</code></div>
                                             <h2>{entry.project.name}</h2>
                                             <p>{entry.project.description}</p>
-                                            <div className="project-stack"><span>STACK</span>{entry.project.stack.map((technology) => <code key={technology}>{technology}</code>)}</div>
+                                            <div className="project-stack">
+                                                <span>STACK</span>{entry.project.stack.map((technology) => <code
+                                                key={technology}>{technology}</code>)}</div>
                                         </div>
                                     )}
                                 </div>
                             </div>
                         ))}
-                        <div ref={outputEndRef} />
+                        <div ref={outputEndRef}/>
                     </section>
 
                     <form className="command-form" onSubmit={onSubmit}>
-                        <label className="prompt-line" htmlFor="command-input"><span className="prompt-user">guest@alexandrith</span><span className="prompt-colon">:</span><span className="prompt-path">~</span><span className="prompt-dollar">$</span></label>
+                        <label className="prompt-line" htmlFor="command-input"><span
+                            className="prompt-user">guest@alexandrith</span><span className="prompt-colon">:</span><span
+                            className="prompt-path">~</span><span className="prompt-dollar">$</span></label>
                         <input
                             ref={inputRef}
                             id="command-input"
@@ -298,9 +325,8 @@ const IndexPage: React.FC<PageProps> = () => {
                     </form>
 
                     <footer className="terminal-footer">
-                        <span><i /> READY FOR INPUT</span>
+                        <span><i/> READY FOR INPUT</span>
                         <span>↑ / ↓ COMMAND HISTORY</span>
-                        <span>BUILT WITH <strong>REACT THREE FIBER</strong></span>
                     </footer>
                 </div>
             </section>

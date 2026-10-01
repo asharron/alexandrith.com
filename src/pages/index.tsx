@@ -34,10 +34,6 @@ import watermelonSeedSprite from '../assets/seed_packet_watermelon.png';
 // @ts-ignore
 import zombieSprite from '../assets/zombie.png';
 // @ts-ignore
-import zombieModel from '../assets/zombie.glb';
-// @ts-ignore
-import potionModel from '../assets/potion.glb';
-// @ts-ignore
 import headshot from '../images/headshot.jpg';
 
 type PortfolioProject = {
@@ -75,6 +71,102 @@ const projects: PortfolioProject[] = [
         videos: [mechDemoMp4],
     },
 ];
+
+const technologies = [
+    {
+        name: "Java",
+        yearsOfExperience: 8,
+        type: "language"
+    },
+    {
+        name: "JavaScript",
+        yearsOfExperience: 8,
+        type: "language"
+    },
+    {
+        name: "React",
+        yearsOfExperience: 8,
+        type: "framework"
+    },
+    {
+        name: "Python",
+        yearsOfExperience: 2,
+        type: "language"
+    },
+    {
+        name: "Golang",
+        yearsOfExperience: 1,
+        type: "language"
+    },
+    {
+        name: "C#",
+        yearsOfExperience: 2,
+        type: "language"
+    },
+    {
+        name: "Spring Boot",
+        yearsOfExperience: 5,
+        type: "framework"
+    },
+    {
+        name: "NestJS",
+        yearsOfExperience: 3,
+        type: "framework"
+    },
+]
+
+const favoriteTools = [
+    {
+        name: "Git"
+    },
+    {
+        name: "NeoVim"
+    },
+    {
+        name: "Webstorm"
+    },
+    {
+        name: "Junie"
+    },
+];
+
+const pastCompanies = [
+    {
+        name: "Pearson Education",
+        startYear: 2023,
+        endYear: 2026,
+    },
+    {
+        name: "Red Hat",
+        startYear: 2021,
+        endYear: 2023,
+    },
+    {
+        name: "BlueAcorn ICI",
+        startYear: 2019,
+        endYear: 2021,
+    },
+    {
+        name: "Capgemini",
+        startYear: 2018,
+        endYear: 2019,
+    }
+];
+
+const pastClients = [
+    {
+        name: "Charter"
+    },
+    {
+        name: "Cox Communications"
+    },
+    {
+        name: "First Citizens Bank",
+    },
+    {
+        name: "Tractor Supply"
+    }
+]
 
 const vertexShader = `
     varying vec2 vUv;

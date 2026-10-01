@@ -1,20 +1,33 @@
 import * as React from "react";
-import { Canvas, useLoader } from "@react-three/fiber";
+import {Canvas, useFrame, useLoader, useThree} from "@react-three/fiber";
 import type { HeadFC, PageProps } from "gatsby";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
 import type { Font } from "three/examples/jsm/loaders/FontLoader.js";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
+import type { Mesh } from "three";
 import "./app.scss";
 
 type ExtrudedTextProps = {
     text: string;
     font: Font;
     position?: [number, number, number];
+    rotationPhase?: number;
     center?: boolean;
 };
 
-const ExtrudedText: React.FC<ExtrudedTextProps> = ({ text, font, position, center = false }) => {
+const CameraRig: React.FC<{x: number; y: number}> = ({x, y}) => {
+    const camera = useThree((s) => s.camera);
+    useEffect(() => {
+        camera.position.set(x, y, 20);
+        camera.lookAt(x, y, 0);
+    }, [camera, x, y]);
+
+    return null;
+}
+
+const ExtrudedText: React.FC<ExtrudedTextProps> = ({ text, font, position, rotationPhase, center = false }) => {
+    const mesh = useRef<Mesh>(null);
     const geometry = useMemo(() => {
         const textGeometry = new TextGeometry(text, {
             font,
@@ -34,25 +47,31 @@ const ExtrudedText: React.FC<ExtrudedTextProps> = ({ text, font, position, cente
         return textGeometry;
     }, [center, font, text]);
 
+    useFrame(({ clock }) => {
+        if (mesh.current && rotationPhase !== undefined) {
+            mesh.current.rotation.z = Math.sin(clock.elapsedTime * 2 + rotationPhase) * (Math.PI / 6);
+        }
+    });
+
     return (
-        <mesh geometry={geometry} position={position}>
+        <mesh ref={mesh} geometry={geometry} position={position}>
             <meshStandardMaterial color={0xff00ff} />
         </mesh>
     );
 };
 
-const TextScene: React.FC<{ characters: string[] }> = ({ characters }) => {
+const TextScene: React.FC<{ characters: Array<{ text: string; rotationPhase: number }> }> = ({ characters }) => {
     const font = useLoader(FontLoader, "/fira.json");
 
     return (
         <>
-            <ExtrudedText text="Test" font={font} center />
-            {characters.map((text, index) => (
+            {characters.map(({ text, rotationPhase }, index) => (
                 <ExtrudedText
                     key={index}
                     text={text}
                     font={font}
                     position={[index % 18, -Math.floor(index / 18) * 1.5, 0]}
+                    rotationPhase={rotationPhase}
                 />
             ))}
             <directionalLight color={0xffffff} position={[0, 0, 10]} />
@@ -61,7 +80,7 @@ const TextScene: React.FC<{ characters: string[] }> = ({ characters }) => {
 };
 
 const IndexPage: React.FC<PageProps> = () => {
-    const [characters, setCharacters] = useState<string[]>([]);
+    const [characters, setCharacters] = useState<Array<{ text: string; rotationPhase: number }>>([]);
 
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
@@ -75,7 +94,8 @@ const IndexPage: React.FC<PageProps> = () => {
                 return;
             }
 
-            setCharacters((current) => [...current, event.key]);
+            const rotationPhase = Math.random() * Math.PI * 2;
+            setCharacters((current) => [...current, { text: event.key, rotationPhase }]);
         };
 
         window.addEventListener("keydown", onKeyDown);
@@ -84,8 +104,9 @@ const IndexPage: React.FC<PageProps> = () => {
 
     return (
         <main className="main">
-            <Canvas camera={{ position: [9, -8, 20], fov: 80 }}>
+            <Canvas camera={{ position: [0, 0, 20], fov: 80 }}>
                 <Suspense fallback={null}>
+                    <CameraRig x={10} y={-10} />
                     <TextScene characters={characters} />
                 </Suspense>
             </Canvas>

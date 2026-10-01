@@ -408,7 +408,7 @@ a:focus-visible {
 }
 
 @keyframes sprite-loop {
-  to { background-position: 100% 0; }
+  to { background-position: var(--sprite-animation-end) 0; }
 }
 
 .hero-player {

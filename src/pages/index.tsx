@@ -161,6 +161,7 @@ const PixelSprite: React.FC<PixelSpriteProps> = ({src, frames, label, className 
             backgroundImage: `url(${src})`,
             backgroundSize: `${frames * 128}px 128px`,
             "--sprite-frames": frames,
+            "--sprite-animation-end": `${frames * -128}px`,
         } as React.CSSProperties}
     />
 );

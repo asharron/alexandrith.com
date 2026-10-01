@@ -332,8 +332,10 @@ a:focus-visible {
   background-image:
     linear-gradient(rgba(94, 76, 145, 0.09) 1px, transparent 1px),
     linear-gradient(90deg, rgba(94, 76, 145, 0.09) 1px, transparent 1px),
-    linear-gradient(155deg, #e8e0fb 0%, #ccedf0 100%);
-  background-size: 20px 20px, 20px 20px, auto;
+    url('../assets/sky.png');
+  background-size: 20px 20px, 20px 20px, cover;
+  background-position: 0 0, 0 0, center;
+  background-repeat: repeat, repeat, no-repeat;
 }
 
 .stage-sun {

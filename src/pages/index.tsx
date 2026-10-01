@@ -249,7 +249,6 @@ const IndexPage: React.FC<PageProps> = () => {
                     <div className="hero-art" role="img" aria-label="Pixel art and a 3D game character">
                         <div className="art-topline"><span>FIG. 01 / LITTLE WORLDS</span><span>✳ 2025—∞</span></div>
                         <div className="hero-stage">
-                            <div className="stage-sun" aria-hidden="true"/>
                             <div className="stage-sparkle stage-sparkle-one" aria-hidden="true">✦</div>
                             <div className="stage-sparkle stage-sparkle-two" aria-hidden="true">✳</div>
                             <div className="model-window" aria-label="A rotating 3D zombie character">

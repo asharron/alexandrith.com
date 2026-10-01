@@ -16,6 +16,8 @@ import mechDemoMp4 from '../images/mech_demo_reduced.mp4';
 // @ts-ignore
 import playerIdleSheet from '../assets/player_idle_4h_1v.png';
 // @ts-ignore
+import playerWalkingSheet from '../assets/player_walking_4h_1v.png';
+// @ts-ignore
 import pixelFireSheet from '../assets/pixelfire_4h_1v.png';
 // @ts-ignore
 import blenderSpinSheet from '../assets/blender-spin_4h_1v.png';
@@ -263,8 +265,10 @@ const IndexPage: React.FC<PageProps> = () => {
                                     </Suspense>
                                 </Canvas>
                             </div>
-                            <PixelSprite src={playerIdleSheet} frames={4} label="Animated player character"
-                                         className="hero-player"/>
+                            <div className="hero-player-walker">
+                                <PixelSprite src={playerWalkingSheet} frames={4} label="Walking player character"
+                                             className="hero-player"/>
+                            </div>
                             <PixelSprite src={pixelFireSheet} frames={4} label="Animated pixel fire"
                                          className="hero-fire"/>
                             <img className="hero-zombie-sprite" src={zombieSprite} alt=""/>

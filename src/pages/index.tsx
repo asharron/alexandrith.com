@@ -1,9 +1,10 @@
 import * as React from "react";
-import {Canvas, useFrame, useThree} from "@react-three/fiber";
+import {Canvas, useFrame, useLoader, useThree} from "@react-three/fiber";
+import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
 import type {HeadFC, PageProps} from "gatsby";
-import {useEffect, useMemo, useRef, useState} from "react";
-import {ShaderMaterial, Vector2} from "three";
-import "./app.scss";
+import {Suspense, useEffect, useMemo, useRef} from "react";
+import {Box3, Group, ShaderMaterial, Vector2, Vector3} from "three";
+import "./portfolio.scss";
 // @ts-ignore
 import lispPocketMonsterGif from '../images/lisp-pocket-monsters.gif';
 // @ts-ignore
@@ -12,6 +13,28 @@ import gogameEditorMp4 from '../images/gogame_editor.mp4';
 import gogameDemoMp4 from '../images/gogame_demo.mp4';
 // @ts-ignore
 import mechDemoMp4 from '../images/mech_demo_reduced.mp4';
+// @ts-ignore
+import playerIdleSheet from '../assets/player_idle_4h_1v.png';
+// @ts-ignore
+import pixelFireSheet from '../assets/pixelfire_4h_1v.png';
+// @ts-ignore
+import blenderSpinSheet from '../assets/blender-spin_4h_1v.png';
+// @ts-ignore
+import grassIdleSheet from '../assets/grass_idle_2h_1v.png';
+// @ts-ignore
+import flowerSprite from '../assets/flower.png';
+// @ts-ignore
+import wateringCanSprite from '../assets/watering_can.png';
+// @ts-ignore
+import tomatoSeedSprite from '../assets/seed_packet_tomato.png';
+// @ts-ignore
+import watermelonSeedSprite from '../assets/seed_packet_watermelon.png';
+// @ts-ignore
+import zombieSprite from '../assets/zombie.png';
+// @ts-ignore
+import zombieModel from '../assets/zombie.glb';
+// @ts-ignore
+import potionModel from '../assets/potion.glb';
 
 type PortfolioProject = {
     name: string;
@@ -20,19 +43,6 @@ type PortfolioProject = {
     images: string[];
     videos: string[];
     stack: string[];
-    linesOfCode: string;
-};
-
-type TerminalEntry = {
-    id: number;
-    command: string;
-    output: string[];
-    showCommands?: boolean;
-    listProjects?: boolean;
-    project?: PortfolioProject;
-    openedResume?: boolean;
-    openedGithub?: boolean;
-    openedLinkedin?: boolean;
 };
 
 const projects: PortfolioProject[] = [
@@ -43,7 +53,6 @@ const projects: PortfolioProject[] = [
         stack: ["Common Lisp", "Raylib", "LDtk"],
         images: [lispPocketMonsterGif],
         videos: [],
-        linesOfCode: "2,000",
     },
     {
         name: "Gogame",
@@ -52,7 +61,6 @@ const projects: PortfolioProject[] = [
         stack: ["Golang", "Ebiten"],
         images: [],
         videos: [gogameEditorMp4, gogameDemoMp4],
-        linesOfCode: "9,000+",
     },
     {
         name: "Mech Game",
@@ -61,20 +69,7 @@ const projects: PortfolioProject[] = [
         stack: ["Godot", "Blender", "C#"],
         images: [],
         videos: [mechDemoMp4],
-        linesOfCode: "2,000+",
     },
-];
-
-const commandReferences = [
-    {command: "help", description: "Show this command reference"},
-    {command: "resume", description: "Open the resume in a new tab"},
-    {command: "github", description: "Open github.com/asharron in a new tab"},
-    {command: "linkedin", description: "Open linkedin.com/in/alexandrith in a new tab"},
-    {command: "projects", description: "List personal projects worked on"},
-    ...projects.map((project) => ({
-        command: `project ${project.slug}`,
-        description: `View ${project.name}`,
-    })),
 ];
 
 const vertexShader = `
@@ -150,148 +145,58 @@ const ShaderBackground: React.FC = () => {
     );
 };
 
-const runHelpCommand = () => {
-    return {
-        output: ["Available commands:"],
-        showCommands: true,
-    };
-}
+type PixelSpriteProps = {
+    src: string;
+    frames: number;
+    label: string;
+    className?: string;
+};
 
-const runResumeCommand = () => {
-    return {
-        output: ["Opening the resume in a new tab…"],
-        openedResume: true,
-    };
-}
+const PixelSprite: React.FC<PixelSpriteProps> = ({src, frames, label, className = ""}) => (
+    <span
+        className={`pixel-sprite ${className}`}
+        role="img"
+        aria-label={label}
+        style={{
+            backgroundImage: `url(${src})`,
+            backgroundSize: `${frames * 128}px 128px`,
+            "--sprite-frames": frames,
+        } as React.CSSProperties}
+    />
+);
 
-const runGithubCommand = () => {
-    return {
-        output: ["Opening github.com/asharron in a new tab"],
-        openedGithub: true,
-    };
-}
+const FloatingModel: React.FC<{src: string; position?: [number, number, number]; targetSize?: number}> = ({
+    src,
+    position = [0, 0, 0],
+    targetSize = 1.4,
+}) => {
+    const gltf = useLoader(GLTFLoader, src);
+    const modelRef = useRef<Group>(null);
+    const model = useMemo(() => {
+        const clone = gltf.scene.clone(true);
+        const bounds = new Box3().setFromObject(clone);
+        const size = bounds.getSize(new Vector3());
+        const center = bounds.getCenter(new Vector3());
+        clone.position.sub(center);
+        clone.scale.setScalar(targetSize / Math.max(size.x, size.y, size.z, 0.001));
+        return clone;
+    }, [gltf, targetSize]);
 
-const runLinkedinCommand = () => {
-    return {
-        output: ["Opening linkedin.com/alexandrith in a new tab…"],
-        openedLinkedin: true,
-    };
-}
+    useFrame(({clock}, delta) => {
+        if (modelRef.current) {
+            modelRef.current.rotation.y += delta * 0.35;
+            modelRef.current.rotation.x = Math.sin(clock.elapsedTime * 0.7) * 0.06;
+        }
+    });
 
-const runProjectsCommand = () => {
-    return {
-        output: ["Example projects:"],
-        listProjects: true,
-    };
-}
-
-const runProjectCommand = (projectName: string, ...args: any[]) => {
-    const project = projects.find((item) => item.slug === projectName);
-
-    if (project) {
-        return {output: [], project};
-    }
-
-    return {
-        output: [`No project found for "${args.join(" ")}". Run projects to see the available names.`],
-    };
-}
-
-const getCommandResult = (command: string): Omit<TerminalEntry, "id" | "command"> => {
-    const [action, ...args] = command.trim().split(/\s+/);
-    const normalizedAction = action.toLowerCase();
-    const projectName = args.join("-").toLowerCase();
-
-    if (normalizedAction === "help") {
-        return runHelpCommand();
-    }
-
-    if (normalizedAction === "resume") {
-        return runResumeCommand();
-    }
-
-    if (normalizedAction === "github") {
-        return runGithubCommand();
-    }
-
-    if (normalizedAction === "linkedin") {
-        return runLinkedinCommand();
-    }
-
-    if (normalizedAction === "projects" && args.length === 0) {
-        return runProjectsCommand();
-    }
-
-    if (normalizedAction === "project") {
-        return runProjectCommand(projectName, args);
-    }
-
-    return {
-        output: [`Command not found: "${command}". Type help to see available commands.`],
-    };
+    return (
+        <group ref={modelRef} position={position}>
+            <primitive object={model}/>
+        </group>
+    );
 };
 
 const IndexPage: React.FC<PageProps> = () => {
-    const [input, setInput] = useState("");
-    const [entries, setEntries] = useState<TerminalEntry[]>([]);
-    const inputRef = useRef<HTMLInputElement>(null);
-    const outputEndRef = useRef<HTMLDivElement>(null);
-    const commandHistory = useRef<string[]>([]);
-    const historyIndex = useRef(-1);
-    const nextEntryId = useRef(0);
-
-    useEffect(() => {
-        outputEndRef.current?.scrollIntoView({behavior: "smooth", block: "end"});
-    }, [entries]);
-
-    const runCommand = (rawCommand: string) => {
-        const command = rawCommand.trim();
-        if (!command) {
-            return;
-        }
-
-        const result = getCommandResult(command);
-        if (result.openedResume) {
-            window.open("/resume.pdf", "_blank", "noopener,noreferrer");
-        }
-
-        if (result.openedGithub) {
-            window.open("https://github.com/asharron", "_blank", "noopener,noreferrer");
-        }
-
-        if (result.openedLinkedin) {
-            window.open("https://linkedin.com/in/alexandrith", "_blank", "noopener,noreferrer");
-        }
-
-        commandHistory.current.push(command);
-        historyIndex.current = commandHistory.current.length;
-        setEntries((current) => [...current, {id: nextEntryId.current++, command, ...result}]);
-        setInput("");
-    };
-
-    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        runCommand(input);
-    };
-
-    const onInputKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "ArrowUp") {
-            event.preventDefault();
-            historyIndex.current = Math.max(0, historyIndex.current - 1);
-            setInput(commandHistory.current[historyIndex.current] ?? "");
-        } else if (event.key === "ArrowDown") {
-            event.preventDefault();
-            historyIndex.current = Math.min(commandHistory.current.length, historyIndex.current + 1);
-            setInput(commandHistory.current[historyIndex.current] ?? "");
-        }
-    };
-
-    const commandButton = (command: string, label = command) => (
-        <button className="command-link" type="button" onClick={() => runCommand(command)}>
-            {label}
-        </button>
-    );
-
     return (
         <main className="portfolio-shell">
             <div className="shader-canvas" aria-hidden="true">
@@ -300,138 +205,160 @@ const IndexPage: React.FC<PageProps> = () => {
                 </Canvas>
             </div>
 
-            <section className="terminal-window" aria-labelledby="portfolio-title">
-                <header className="terminal-topbar">
-                    <div className="window-controls" aria-hidden="true">
-                        <span className="window-control window-control-red"/>
-                        <span className="window-control window-control-yellow"/>
-                        <span className="window-control window-control-green"/>
-                    </div>
-                    <span className="terminal-title">alexandrith.com — portfolio</span>
+            <div className="site-frame" id="top">
+                <header className="site-header">
+                    <a className="brand" href="#top" aria-label="Alexandrith home">
+                        <img src={flowerSprite} alt=""/>
+                        <span>alexandrith<span className="brand-dot">.com</span></span>
+                    </a>
+                    <nav className="main-nav" aria-label="Main navigation">
+                        <a href="#projects">Projects</a>
+                        <a href="#about">About</a>
+                        <a href="#contact">Contact</a>
+                    </nav>
+                    <a className="header-link" href="https://github.com/asharron" target="_blank"
+                       rel="noopener noreferrer">GITHUB <span aria-hidden="true">↗</span></a>
                 </header>
 
-                <div className="terminal-content">
-                    <section className="welcome-block">
-                        <div className="eyebrow"><span>//</span> INTERACTIVE PORTFOLIO
+                <section className="hero" aria-labelledby="portfolio-title">
+                    <div className="hero-copy">
+                        <p className="hero-kicker"><span/> SOFTWARE / GAMES / PIXEL WORLDS</p>
+                        <h1 id="portfolio-title">Making little<br/>worlds with <em>big</em><br/>ideas<span
+                            className="title-star">✳</span></h1>
+                        <p className="hero-intro">Hey, I’m Alexandrith — a software developer and game maker. I like turning curious ideas into playful things you can explore.</p>
+                        <div className="hero-actions">
+                            <a className="button button-primary" href="#projects">Explore projects <span
+                                aria-hidden="true">↓</span></a>
+                            <a className="button button-secondary" href="/resume.pdf" target="_blank"
+                               rel="noopener noreferrer">My résumé <span aria-hidden="true">↗</span></a>
                         </div>
-                        <h1 id="portfolio-title">alexandrith<span>.com</span></h1>
-                        <p className="welcome-copy">Personal portfolio for Alexandrith Sharron</p>
-                        <div className="system-meta">
-                            <span>TYPE {commandButton("help")} TO BEGIN</span>
+                        <div className="hero-footnote">
+                            <span>IN MY INVENTORY</span>
+                            <img src={wateringCanSprite} alt=""/>
+                            <img src={tomatoSeedSprite} alt=""/>
+                            <img src={watermelonSeedSprite} alt=""/>
+                            <span>ideas, games &amp; tools</span>
                         </div>
-                    </section>
+                    </div>
 
-                    <section className="terminal-log" aria-label="Command output" aria-live="polite">
-                        <div className="welcome-output">
-                            <p className="output-line">Welcome to my portfolio site. Enter a command below, or type {commandButton("help")} to see
-                                what is available.</p>
-                        </div>
-                        {entries.map((entry) => (
-                            <div className="command-entry" key={entry.id}>
-                                <div className="prompt-line"><span className="prompt-user">guest@alexandrith</span><span
-                                    className="prompt-colon">:</span><span className="prompt-path">~</span><span
-                                    className="prompt-dollar">$</span><span>{entry.command}</span></div>
-                                <div className="command-output">
-                                    {entry.output.map((line, index) => <p className="output-line"
-                                                                          key={index}>{line}</p>)}
-                                    {entry.showCommands && (
-                                        <div className="command-reference">
-                                            {commandReferences.map(({command, description}) => (
-                                                <div className="command-reference-row" key={command}>
-                                                    {commandButton(command)}
-                                                    <span>{description}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                    {entry.openedResume && (
-                                        <a className="resume-link" href="/resume.pdf" target="_blank"
-                                           rel="noopener noreferrer">
-                                            Open resume.pdf <span aria-hidden="true">↗</span>
-                                        </a>
-                                    )}
-                                    {entry.openedGithub && (
-                                        <a className="resume-link" href="github.com/asharron" target="_blank"
-                                           rel="noopener noreferrer">
-                                            Open github.com/asharron <span aria-hidden="true">↗</span>
-                                        </a>
-                                    )}
-                                    {entry.openedLinkedin && (
-                                        <a className="resume-link" href="github.com/asharron" target="_blank"
-                                           rel="noopener noreferrer">
-                                            Open linkedin.com/in/alexandrith <span aria-hidden="true">↗</span>
-                                        </a>
-                                    )}
-
-
-                                    {entry.listProjects && (
-                                        <div className="project-list">
-                                            {projects.map((project) => (
-                                                <div className="project-row" key={project.slug}>
-                                                    {commandButton(`project ${project.slug}`, project.slug)}
-                                                    <span>{project.description}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                    {entry.project && (
-                                        <div className="project-detail">
-                                            <div className="project-detail-heading">
-                                                <span>PROJECT</span><code>{entry.project.slug}</code></div>
-                                            <h2>{entry.project.name}</h2>
-                                            <p>{entry.project.description}</p>
-                                            <p>Lines of code: {entry.project.linesOfCode}</p>
-
-                                            {entry.project.images.map((image, index) => (
-                                                <img className={'project-image'} key={index} src={image} alt="image" />
-                                            ))}
-
-                                            {entry.project.videos.map((video, index) => (
-                                                <video className={'project-video'} key={index} src={video} controls={true} />
-                                            ))}
-
-                                            <div className="project-stack">
-                                                <span>STACK</span>{entry.project.stack.map((technology) => <code
-                                                key={technology}>{technology}</code>)}</div>
-                                        </div>
-                                    )}
-                                </div>
+                    <div className="hero-art" role="img" aria-label="Pixel art and a 3D game character">
+                        <div className="art-topline"><span>FIG. 01 / LITTLE WORLDS</span><span>✳ 2025—∞</span></div>
+                        <div className="hero-stage">
+                            <div className="stage-sun" aria-hidden="true"/>
+                            <div className="stage-sparkle stage-sparkle-one" aria-hidden="true">✦</div>
+                            <div className="stage-sparkle stage-sparkle-two" aria-hidden="true">✳</div>
+                            <div className="model-window" aria-label="A rotating 3D zombie character">
+                                <Canvas className="hero-model-canvas" camera={{position: [0, 0, 3], fov: 42}}
+                                        dpr={[1, 1.5]} gl={{alpha: true, antialias: true}}>
+                                    <ambientLight intensity={1.6}/>
+                                    <directionalLight position={[3, 4, 4]} intensity={2.4}/>
+                                    <pointLight position={[-3, 1, 2]} intensity={1.2} color="#ff88cf"/>
+                                    <Suspense fallback={null}>
+                                        <FloatingModel src={zombieModel}/>
+                                        <FloatingModel src={potionModel} position={[0.78, -0.38, 0.1]} targetSize={0.42}/>
+                                    </Suspense>
+                                </Canvas>
                             </div>
-                        ))}
-                        <div ref={outputEndRef}/>
-                    </section>
+                            <PixelSprite src={playerIdleSheet} frames={4} label="Animated player character"
+                                         className="hero-player"/>
+                            <PixelSprite src={pixelFireSheet} frames={4} label="Animated pixel fire"
+                                         className="hero-fire"/>
+                            <img className="hero-zombie-sprite" src={zombieSprite} alt=""/>
+                            <div className="stage-ground" aria-hidden="true"/>
+                            <PixelSprite src={grassIdleSheet} frames={2} label="Swaying pixel grass"
+                                         className="hero-grass"/>
+                            <div className="stage-tag"><span className="tag-dot"/> GO GAME / FIELD 01</div>
+                        </div>
+                        <div className="art-caption"><span>pixel by pixel, polygon by polygon</span><PixelSprite
+                            src={blenderSpinSheet} frames={4} label="Spinning Blender icon" className="blender-sprite"/></div>
+                    </div>
+                </section>
 
-                    <form className="command-form" onSubmit={onSubmit}>
-                        <label className="prompt-line" htmlFor="command-input"><span
-                            className="prompt-user">guest@alexandrith</span><span className="prompt-colon">:</span><span
-                            className="prompt-path">~</span><span className="prompt-dollar">$</span></label>
-                        <input
-                            ref={inputRef}
-                            id="command-input"
-                            type="text"
-                            value={input}
-                            onChange={(event) => setInput(event.target.value)}
-                            onKeyDown={onInputKeyDown}
-                            placeholder="enter a command..."
-                            autoComplete="off"
-                            autoCapitalize="off"
-                            spellCheck={false}
-                            aria-label="Enter a portfolio command"
-                        />
-                        <button type="submit" aria-label="Run command">↵</button>
-                    </form>
-
-                    <footer className="terminal-footer">
-                        <span><i/> READY FOR INPUT</span>
-                        <span>↑ / ↓ COMMAND HISTORY</span>
-                    </footer>
+                <div className="marquee" aria-hidden="true">
+                    <div>GAMES <span>✳</span> SYSTEMS <span>✳</span> PIXEL ART <span>✳</span> EXPERIMENTS <span>✳</span> GAMES <span>✳</span> SYSTEMS <span>✳</span> PIXEL ART <span>✳</span> EXPERIMENTS <span>✳</span></div>
                 </div>
-            </section>
-            <div className="ambient-label" aria-hidden="true">WEBGL / FRAGMENT_SHADER / 60 FPS</div>
+
+                <section className="projects-section" id="projects" aria-labelledby="projects-title">
+                    <div className="section-heading">
+                        <div><p className="section-kicker">THE PROJECT ARCADE <span>✳</span></p>
+                            <h2 id="projects-title">A few things I’ve <em>made.</em></h2></div>
+                        <p className="section-note">Personal projects, prototypes, and worlds built one experiment at a time.</p>
+                    </div>
+                    <div className="project-grid">
+                        {projects.map((project, index) => (
+                            <article className={`project-card project-card-${project.slug}`} key={project.slug}>
+                                <div className="project-card-top"><span>PROJECT / {String(index + 1).padStart(2, "0")}</span><span>✳</span></div>
+                                <div className="project-media">
+                                    {project.images.map((image, imageIndex) => (
+                                        <img key={imageIndex} src={image} alt={`${project.name} gameplay preview`}
+                                             loading="lazy"/>
+                                    ))}
+                                    {project.videos.map((video, videoIndex) => (
+                                        <video key={videoIndex} src={video} controls muted loop playsInline
+                                               preload="metadata" aria-label={`${project.name} demo ${videoIndex + 1}`}/>
+                                    ))}
+                                    {project.slug === "gogame" && <div className="farm-sprites" aria-hidden="true">
+                                        <img src={wateringCanSprite} alt=""/>
+                                        <img src={tomatoSeedSprite} alt=""/>
+                                        <img src={watermelonSeedSprite} alt=""/>
+                                    </div>}
+                                    {project.slug === "mech-game" && <PixelSprite src={blenderSpinSheet} frames={4}
+                                        label="Spinning Blender icon" className="project-blender-sprite"/>}
+                                </div>
+                                <div className="project-info">
+                                    <p className="project-slug">/{project.slug}</p>
+                                    <h3>{project.name}</h3>
+                                    <p className="project-description">{project.description}</p>
+                                    <ul className="tag-list" aria-label={`${project.name} technology stack`}>
+                                        {project.stack.map((technology) => <li key={technology}>{technology}</li>)}
+                                    </ul>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
+
+                <section className="about-section" id="about" aria-labelledby="about-title">
+                    <div className="about-copy">
+                        <p className="section-kicker">A LITTLE ABOUT ME <span>✳</span></p>
+                        <h2 id="about-title">Curiosity is my<br/><em>favorite tool.</em></h2>
+                        <p>I’m drawn to the whole process of making things: shaping an idea, building the systems behind it, and adding the details that make a world feel alive. Lately that means games, graphics, and small experiments that grow into something playable.</p>
+                        <a className="text-link" href="https://linkedin.com/in/alexandrith" target="_blank"
+                           rel="noopener noreferrer">More about me on LinkedIn <span aria-hidden="true">↗</span></a>
+                    </div>
+                    <div className="about-art" aria-label="A collection of game development pixel art">
+                        <div className="about-art-label">CURRENT LOADOUT <span>04 ITEMS</span></div>
+                        <div className="loadout-grid">
+                            <div><img src={wateringCanSprite} alt=""/><span>GROW</span></div>
+                            <div><img src={tomatoSeedSprite} alt=""/><span>PLANT</span></div>
+                            <div><img src={watermelonSeedSprite} alt=""/><span>PLAY</span></div>
+                            <div><PixelSprite src={grassIdleSheet} frames={2} label="Animated grass"/><span>REPEAT</span></div>
+                        </div>
+                        <div className="about-art-bottom"><PixelSprite src={pixelFireSheet} frames={4}
+                            label="Animated pixel fire"/><span>MADE WITH<br/>A LITTLE MAGIC</span><img src={flowerSprite} alt=""/></div>
+                    </div>
+                </section>
+
+                <section className="contact-section" id="contact" aria-labelledby="contact-title">
+                    <div className="contact-pixel" aria-hidden="true"><PixelSprite src={playerIdleSheet} frames={4}
+                        label="Animated player character"/></div>
+                    <div><p className="section-kicker">YOUR TURN <span>✳</span></p>
+                        <h2 id="contact-title">Got a fun idea?</h2>
+                        <p>Come say hi, peek at the code, or take a look at my résumé.</p></div>
+                    <div className="contact-links">
+                        <a href="https://github.com/asharron" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                        <a href="https://linkedin.com/in/alexandrith" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+                        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">Résumé ↗</a>
+                    </div>
+                </section>
+
+                <footer className="site-footer"><a className="footer-brand" href="#top">alexandrith<span>.com</span></a>
+                    <span>BUILT WITH PIXELS, POLYGONS &amp; CURIOSITY</span><a href="#top">BACK TO TOP ↑</a></footer>
+            </div>
         </main>
     );
 };
 
 export default IndexPage;
 
-export const Head: HeadFC = () => <title>alexandrith.com — Interactive Portfolio</title>;
+export const Head: HeadFC = () => <title>Alexandrith — Game &amp; Software Developer</title>;

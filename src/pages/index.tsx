@@ -27,6 +27,7 @@ type TerminalEntry = {
     id: number;
     command: string;
     output: string[];
+    showCommands?: boolean;
     listProjects?: boolean;
     project?: PortfolioProject;
     openedResume?: boolean;
@@ -62,6 +63,18 @@ const projects: PortfolioProject[] = [
         videos: [mechDemoMp4],
         linesOfCode: "2,000+",
     },
+];
+
+const commandReferences = [
+    {command: "help", description: "Show this command reference"},
+    {command: "resume", description: "Open the resume in a new tab"},
+    {command: "github", description: "Open github.com/asharron in a new tab"},
+    {command: "linkedin", description: "Open linkedin.com/in/alexandrith in a new tab"},
+    {command: "projects", description: "List personal projects worked on"},
+    ...projects.map((project) => ({
+        command: `project ${project.slug}`,
+        description: `View ${project.name}`,
+    })),
 ];
 
 const vertexShader = `
@@ -139,16 +152,8 @@ const ShaderBackground: React.FC = () => {
 
 const runHelpCommand = () => {
     return {
-        output: [
-            "Available commands:",
-            "  help                  Show this command reference",
-            "  resume                Open the resume in a new tab",
-            "  github                Open github.com/asharron in a new tab",
-            "  linkedin              Open linkedin.com/in/alexandrith in a new tab",
-            "  projects              List personal projects worked on",
-            "  project <name>        View a project by its name",
-            "Try: project gogame",
-        ],
+        output: ["Available commands:"],
+        showCommands: true,
     };
 }
 
@@ -175,7 +180,7 @@ const runLinkedinCommand = () => {
 
 const runProjectsCommand = () => {
     return {
-        output: ["Example projects — run `project <name>` to inspect one:"],
+        output: ["Example projects:"],
         listProjects: true,
     };
 }
@@ -281,6 +286,12 @@ const IndexPage: React.FC<PageProps> = () => {
         }
     };
 
+    const commandButton = (command: string, label = command) => (
+        <button className="command-link" type="button" onClick={() => runCommand(command)}>
+            {label}
+        </button>
+    );
+
     return (
         <main className="portfolio-shell">
             <div className="shader-canvas" aria-hidden="true">
@@ -306,13 +317,13 @@ const IndexPage: React.FC<PageProps> = () => {
                         <h1 id="portfolio-title">alexandrith<span>.com</span></h1>
                         <p className="welcome-copy">Personal portfolio for Alexandrith Sharron</p>
                         <div className="system-meta">
-                            <span>TYPE <strong>help</strong> TO BEGIN</span>
+                            <span>TYPE {commandButton("help")} TO BEGIN</span>
                         </div>
                     </section>
 
                     <section className="terminal-log" aria-label="Command output" aria-live="polite">
                         <div className="welcome-output">
-                            <p className="output-line">Welcome to my portfolio site. Enter a command below, or type <code>help</code> to see
+                            <p className="output-line">Welcome to my portfolio site. Enter a command below, or type {commandButton("help")} to see
                                 what is available.</p>
                         </div>
                         {entries.map((entry) => (
@@ -323,6 +334,16 @@ const IndexPage: React.FC<PageProps> = () => {
                                 <div className="command-output">
                                     {entry.output.map((line, index) => <p className="output-line"
                                                                           key={index}>{line}</p>)}
+                                    {entry.showCommands && (
+                                        <div className="command-reference">
+                                            {commandReferences.map(({command, description}) => (
+                                                <div className="command-reference-row" key={command}>
+                                                    {commandButton(command)}
+                                                    <span>{description}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                     {entry.openedResume && (
                                         <a className="resume-link" href="/resume.pdf" target="_blank"
                                            rel="noopener noreferrer">
@@ -347,7 +368,8 @@ const IndexPage: React.FC<PageProps> = () => {
                                         <div className="project-list">
                                             {projects.map((project) => (
                                                 <div className="project-row" key={project.slug}>
-                                                    <code>{project.slug}</code><span>{project.description}</span>
+                                                    {commandButton(`project ${project.slug}`, project.slug)}
+                                                    <span>{project.description}</span>
                                                 </div>
                                             ))}
                                         </div>

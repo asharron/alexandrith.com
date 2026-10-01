@@ -62,7 +62,7 @@ const projects: PortfolioProject[] = [
         name: "Gogame",
         slug: "gogame",
         description: "A prototype of a game editor and game based on farming and combat written in Go",
-        stack: ["Golang", "Ebiten"],
+        stack: ["Golang", "Ebiten", "EbitenUI"],
         images: [],
         videos: [gogameEditorMp4, gogameDemoMp4],
     },
@@ -228,10 +228,10 @@ const IndexPage: React.FC<PageProps> = () => {
 
                 <section className="hero" aria-labelledby="portfolio-title">
                     <div className="hero-copy">
-                        <p className="hero-kicker"><span/> SOFTWARE / GAMES / PIXEL WORLDS</p>
-                        <h1 id="portfolio-title">Making little<br/>worlds with <em>big</em><br/>ideas<span
+                        <p className="hero-kicker"><span/> WEB / SOFTWARE / GAMES / PIXEL ART</p>
+                        <h1 id="portfolio-title">Building<br/>Software With <em>Passion</em><span
                             className="title-star">✳</span></h1>
-                        <p className="hero-intro">Hey, I’m Alexandrith — a software developer and game maker. I like turning curious ideas into playful things you can explore.</p>
+                        <p className="hero-intro">Hey, I’m Alexandrith — a full stack software developer with experience in Java and React. I love web technology, but I also love to make games in my free time!</p>
                         <img src={headshot} alt="profile headshot" className={'headshot'}/>
                         <div className="hero-actions">
                             <a className="button button-primary" href="#projects">Explore projects <span
@@ -249,22 +249,10 @@ const IndexPage: React.FC<PageProps> = () => {
                     </div>
 
                     <div className="hero-art" role="img" aria-label="Pixel art and a 3D game character">
-                        <div className="art-topline"><span>FIG. 01 / LITTLE WORLDS</span><span>✳ 2025—∞</span></div>
+                        <div className="art-topline"><span>FIG. 01</span><span>✳ 2026—∞</span></div>
                         <div className="hero-stage">
                             <div className="stage-sparkle stage-sparkle-one" aria-hidden="true">✦</div>
                             <div className="stage-sparkle stage-sparkle-two" aria-hidden="true">✳</div>
-                            <div className="model-window" aria-label="A rotating 3D zombie character">
-                                <Canvas className="hero-model-canvas" camera={{position: [0, 0, 3], fov: 42}}
-                                        dpr={[1, 1.5]} gl={{alpha: true, antialias: true}}>
-                                    <ambientLight intensity={1.6}/>
-                                    <directionalLight position={[3, 4, 4]} intensity={2.4}/>
-                                    <pointLight position={[-3, 1, 2]} intensity={1.2} color="#FF77A8"/>
-                                    <Suspense fallback={null}>
-                                        <FloatingModel src={zombieModel}/>
-                                        <FloatingModel src={potionModel} position={[0.78, -0.38, 0.1]} targetSize={0.42}/>
-                                    </Suspense>
-                                </Canvas>
-                            </div>
                             <div className="hero-player-walker">
                                 <PixelSprite src={playerWalkingSheet} frames={4} label="Walking player character"
                                              className="hero-player"/>
@@ -288,7 +276,6 @@ const IndexPage: React.FC<PageProps> = () => {
                                          className="hero-flower"/>
                             <PixelSprite src={flowerSprite} frames={1} label="Flower Sprite"
                                          className="hero-flower2"/>
-                            <div className="stage-tag"><span className="tag-dot"/> GO GAME / FIELD 01</div>
                         </div>
                         <div className="art-caption"><span>pixel by pixel, polygon by polygon</span><PixelSprite
                             src={blenderSpinSheet} frames={4} label="Spinning Blender icon" className="blender-sprite"/></div>

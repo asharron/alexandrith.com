@@ -49,7 +49,7 @@ const ExtrudedText: React.FC<ExtrudedTextProps> = ({ text, font, position, rotat
 
     useFrame(({ clock }) => {
         if (mesh.current && rotationPhase !== undefined) {
-            mesh.current.rotation.z = Math.sin(clock.elapsedTime * 2 + rotationPhase) * (Math.PI / 6);
+            mesh.current.rotation.y = Math.sin(clock.elapsedTime * 2 + rotationPhase) * (Math.PI / 12);
         }
     });
 
@@ -59,6 +59,24 @@ const ExtrudedText: React.FC<ExtrudedTextProps> = ({ text, font, position, rotat
         </mesh>
     );
 };
+
+const BannerScene: React.FC = () => {
+    const font = useLoader(FontLoader, "/fira.json");
+
+    return (
+        <>
+            {'alexandrith.com'.split('').map((letter, idx) => {
+                return <ExtrudedText
+                    key={letter}
+                    text={letter}
+                    font={font}
+                    position={[idx, 2, 0]}
+                    rotationPhase={0}
+                />
+            })}
+        </>
+    );
+}
 
 const TextScene: React.FC<{ characters: Array<{ text: string; rotationPhase: number }> }> = ({ characters }) => {
     const font = useLoader(FontLoader, "/fira.json");
@@ -106,6 +124,7 @@ const IndexPage: React.FC<PageProps> = () => {
         <main className="main">
             <Canvas camera={{ position: [0, 0, 20], fov: 80 }}>
                 <Suspense fallback={null}>
+                    <BannerScene />
                     <CameraRig x={10} y={-10} />
                     <TextScene characters={characters} />
                 </Suspense>

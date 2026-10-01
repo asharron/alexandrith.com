@@ -4,12 +4,23 @@ import type {HeadFC, PageProps} from "gatsby";
 import {useEffect, useMemo, useRef, useState} from "react";
 import {ShaderMaterial, Vector2} from "three";
 import "./app.scss";
+// @ts-ignore
+import lispPocketMonsterGif from '../images/lisp-pocket-monsters.gif';
+// @ts-ignore
+import gogameEditorMp4 from '../images/gogame_editor.mp4';
+// @ts-ignore
+import gogameDemoMp4 from '../images/gogame_demo.mp4';
+// @ts-ignore
+import mechDemoMp4 from '../images/mech_demo_reduced.mp4';
 
 type PortfolioProject = {
     name: string;
     slug: string;
     description: string;
+    images: string[];
+    videos: string[];
     stack: string[];
+    linesOfCode: string;
 };
 
 type TerminalEntry = {
@@ -19,26 +30,37 @@ type TerminalEntry = {
     listProjects?: boolean;
     project?: PortfolioProject;
     openedResume?: boolean;
+    openedGithub?: boolean;
+    openedLinkedin?: boolean;
 };
 
 const projects: PortfolioProject[] = [
     {
-        name: "Mesh Field",
-        slug: "mesh-field",
-        description: "A real-time generative landscape built from animated vertex displacement and custom shader materials.",
-        stack: ["Three.js", "GLSL", "React"],
+        name: "Lisp Pocket Monsters",
+        slug: "lisp-pocket-monsters",
+        description: "A prototype game of pocket monsters written in Common Lisp utilizing Raylib",
+        stack: ["Common Lisp", "Raylib", "LDtk"],
+        images: [lispPocketMonsterGif],
+        videos: [],
+        linesOfCode: "2,000",
     },
     {
-        name: "Shader Playground",
-        slug: "shader-playground",
-        description: "An interactive collection of fragment-shader experiments for color, light, and procedural patterns.",
-        stack: ["WebGL", "GLSL", "TypeScript"],
+        name: "Gogame",
+        slug: "gogame",
+        description: "A prototype of a game editor and game based on farming and combat written in Go",
+        stack: ["Golang", "Ebiten"],
+        images: [],
+        videos: [gogameEditorMp4, gogameDemoMp4],
+        linesOfCode: "9,000+",
     },
     {
-        name: "Terminal Portfolio",
-        slug: "terminal-portfolio",
-        description: "A command-line inspired portfolio interface with a responsive layout and a living shader backdrop.",
-        stack: ["Gatsby", "React Three Fiber", "Sass"],
+        name: "Mech Game",
+        slug: "mech-game",
+        description: "A first person mech game built in Godot Mono with C#",
+        stack: ["Godot", "Blender", "C#"],
+        images: [],
+        videos: [mechDemoMp4],
+        linesOfCode: "2,000+",
     },
 ];
 
@@ -121,9 +143,11 @@ const runHelpCommand = () => {
             "Available commands:",
             "  help                  Show this command reference",
             "  resume                Open the resume in a new tab",
-            "  projects              List the example projects",
+            "  github                Open github.com/asharron in a new tab",
+            "  linkedin              Open linkedin.com/in/alexandrith in a new tab",
+            "  projects              List personal projects worked on",
             "  project <name>        View a project by its name",
-            "Try: project mesh-field",
+            "Try: project gogame",
         ],
     };
 }
@@ -132,6 +156,20 @@ const runResumeCommand = () => {
     return {
         output: ["Opening the resume in a new tab…"],
         openedResume: true,
+    };
+}
+
+const runGithubCommand = () => {
+    return {
+        output: ["Opening github.com/asharron in a new tab"],
+        openedGithub: true,
+    };
+}
+
+const runLinkedinCommand = () => {
+    return {
+        output: ["Opening linkedin.com/alexandrith in a new tab…"],
+        openedLinkedin: true,
     };
 }
 
@@ -165,6 +203,14 @@ const getCommandResult = (command: string): Omit<TerminalEntry, "id" | "command"
 
     if (normalizedAction === "resume") {
         return runResumeCommand();
+    }
+
+    if (normalizedAction === "github") {
+        return runGithubCommand();
+    }
+
+    if (normalizedAction === "linkedin") {
+        return runLinkedinCommand();
     }
 
     if (normalizedAction === "projects" && args.length === 0) {
@@ -202,6 +248,14 @@ const IndexPage: React.FC<PageProps> = () => {
         const result = getCommandResult(command);
         if (result.openedResume) {
             window.open("/resume.pdf", "_blank", "noopener,noreferrer");
+        }
+
+        if (result.openedGithub) {
+            window.open("https://github.com/asharron", "_blank", "noopener,noreferrer");
+        }
+
+        if (result.openedLinkedin) {
+            window.open("https://linkedin.com/in/alexandrith", "_blank", "noopener,noreferrer");
         }
 
         commandHistory.current.push(command);
@@ -258,10 +312,7 @@ const IndexPage: React.FC<PageProps> = () => {
 
                     <section className="terminal-log" aria-label="Command output" aria-live="polite">
                         <div className="welcome-output">
-                            <div className="prompt-line"><span className="prompt-user">guest@alexandrith</span><span
-                                className="prompt-colon">:</span><span className="prompt-path">~</span><span
-                                className="prompt-dollar">$</span><span>help</span></div>
-                            <p className="output-line">Welcome. Enter a command below, or type <code>help</code> to see
+                            <p className="output-line">Welcome to my portfolio site. Enter a command below, or type <code>help</code> to see
                                 what is available.</p>
                         </div>
                         {entries.map((entry) => (
@@ -278,6 +329,20 @@ const IndexPage: React.FC<PageProps> = () => {
                                             Open resume.pdf <span aria-hidden="true">↗</span>
                                         </a>
                                     )}
+                                    {entry.openedGithub && (
+                                        <a className="resume-link" href="github.com/asharron" target="_blank"
+                                           rel="noopener noreferrer">
+                                            Open github.com/asharron <span aria-hidden="true">↗</span>
+                                        </a>
+                                    )}
+                                    {entry.openedLinkedin && (
+                                        <a className="resume-link" href="github.com/asharron" target="_blank"
+                                           rel="noopener noreferrer">
+                                            Open linkedin.com/in/alexandrith <span aria-hidden="true">↗</span>
+                                        </a>
+                                    )}
+
+
                                     {entry.listProjects && (
                                         <div className="project-list">
                                             {projects.map((project) => (
@@ -293,6 +358,16 @@ const IndexPage: React.FC<PageProps> = () => {
                                                 <span>PROJECT</span><code>{entry.project.slug}</code></div>
                                             <h2>{entry.project.name}</h2>
                                             <p>{entry.project.description}</p>
+                                            <p>Lines of code: {entry.project.linesOfCode}</p>
+
+                                            {entry.project.images.map((image, index) => (
+                                                <img className={'project-image'} key={index} src={image} alt="image" />
+                                            ))}
+
+                                            {entry.project.videos.map((video, index) => (
+                                                <video className={'project-video'} key={index} src={video} controls={true} />
+                                            ))}
+
                                             <div className="project-stack">
                                                 <span>STACK</span>{entry.project.stack.map((technology) => <code
                                                 key={technology}>{technology}</code>)}</div>

@@ -35,6 +35,8 @@ import zombieSprite from '../assets/zombie.png';
 import zombieModel from '../assets/zombie.glb';
 // @ts-ignore
 import potionModel from '../assets/potion.glb';
+// @ts-ignore
+import headshot from '../images/headshot.jpg';
 
 type PortfolioProject = {
     name: string;
@@ -227,6 +229,7 @@ const IndexPage: React.FC<PageProps> = () => {
                         <h1 id="portfolio-title">Making little<br/>worlds with <em>big</em><br/>ideas<span
                             className="title-star">✳</span></h1>
                         <p className="hero-intro">Hey, I’m Alexandrith — a software developer and game maker. I like turning curious ideas into playful things you can explore.</p>
+                        <img src={headshot} alt="profile headshot" className={'headshot'}/>
                         <div className="hero-actions">
                             <a className="button button-primary" href="#projects">Explore projects <span
                                 aria-hidden="true">↓</span></a>

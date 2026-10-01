@@ -236,7 +236,7 @@ a:focus-visible {
 
 .hero-intro {
   max-width: 440px;
-  margin: 24px 0 0;
+  margin: 24px 0 16px;
   color: #6f6782;
   font-size: 15px;
   line-height: 1.8;
@@ -871,6 +871,11 @@ a:focus-visible {
 
 @keyframes twinkle {
   50% { opacity: 0.38; transform: scale(0.82) rotate(18deg); }
+}
+
+.headshot {
+  max-width: 25%;
+  border-radius: 50%;
 }
 
 @media (max-width: 900px) {

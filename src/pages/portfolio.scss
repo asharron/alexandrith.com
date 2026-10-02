@@ -86,10 +86,9 @@ a:focus-visible {
   min-height: 100vh;
   overflow: hidden;
   isolation: isolate;
-  background:
-    radial-gradient(ellipse at 81% 10%, rgba(255, 119, 168, 0.16), transparent 32%),
-    radial-gradient(ellipse at 8% 48%, rgba(41, 173, 255, 0.13), transparent 35%),
-    var(--color-paper);
+  background: radial-gradient(ellipse at 81% 10%, rgba(255, 119, 168, 0.16), transparent 32%),
+  radial-gradient(ellipse at 8% 48%, rgba(41, 173, 255, 0.13), transparent 35%),
+  var(--color-paper);
   padding: 0 28px 28px;
 }
 
@@ -354,10 +353,9 @@ a:focus-visible {
   overflow: hidden;
   border: 1px solid rgba(29, 43, 83, 0.3);
   background-color: var(--pixel-blue);
-  background-image:
-    linear-gradient(rgba(29, 43, 83, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(29, 43, 83, 0.12) 1px, transparent 1px),
-    url('../assets/sky.png');
+  background-image: linear-gradient(rgba(29, 43, 83, 0.12) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(29, 43, 83, 0.12) 1px, transparent 1px),
+  url('../assets/sky.png');
   background-size: 20px 20px, 20px 20px, cover;
   background-position: 0 0, 0 0, center;
   background-repeat: repeat, repeat, no-repeat;
@@ -435,7 +433,9 @@ a:focus-visible {
 }
 
 @keyframes sprite-loop {
-  to { background-position: var(--sprite-animation-end) 0; }
+  to {
+    background-position: var(--sprite-animation-end) 0;
+  }
 }
 
 .hero-player-walker {
@@ -450,15 +450,30 @@ a:focus-visible {
 
 .hero-player {
   animation: sprite-loop calc(var(--sprite-frames) * 0.16s) steps(var(--sprite-frames)) infinite,
-    hero-player-face 24s infinite;
+  hero-player-face 24s infinite;
 }
 
 @keyframes hero-player-walk {
-  0% { left: calc(23% - 64px); bottom: 30px; }
-  25% { left: calc(36.5% - 64px); bottom: 30px; }
-  50% { left: calc(50% - 64px); bottom: 30px; }
-  75% { left: calc(63.5% - 64px); bottom: 30px; }
-  100% { left: calc(77% - 64px); bottom: 30px; }
+  0% {
+    left: calc(23% - 64px);
+    bottom: 30px;
+  }
+  25% {
+    left: calc(36.5% - 64px);
+    bottom: 30px;
+  }
+  50% {
+    left: calc(50% - 64px);
+    bottom: 30px;
+  }
+  75% {
+    left: calc(63.5% - 64px);
+    bottom: 30px;
+  }
+  100% {
+    left: calc(77% - 64px);
+    bottom: 30px;
+  }
 }
 
 @keyframes hero-player-face {
@@ -470,7 +485,9 @@ a:focus-visible {
     scale: -1 1;
     animation-timing-function: steps(1, end);
   }
-  100% { scale: 1 1; }
+  100% {
+    scale: 1 1;
+  }
 }
 
 .hero-fire {
@@ -602,7 +619,9 @@ a:focus-visible {
 }
 
 @keyframes marquee-scroll {
-  to { transform: translateX(-20%); }
+  to {
+    transform: translateX(-20%);
+  }
 }
 
 .projects-section {
@@ -1148,7 +1167,10 @@ a:focus-visible {
 }
 
 @keyframes twinkle {
-  50% { opacity: 0.38; transform: scale(0.82) rotate(18deg); }
+  50% {
+    opacity: 0.38;
+    transform: scale(0.82) rotate(18deg);
+  }
 }
 
 .headshot {
@@ -1307,15 +1329,64 @@ a:focus-visible {
   }
 
   .hero-grass {
-    right: 71px;
+    right: 110px;
+    bottom: 10px;
     transform: scale(0.4);
+
+    &--2 {
+      right: 240px;
+    }
+
+    &--3 {
+      right: 200px;
+      bottom: 10px;
+    }
+
+    &--4 {
+      right: 180px;
+      bottom: 20px;
+    }
+
+    &--5 {
+      right: 70px;
+    }
+  }
+
+  .hero-flower {
+    position: absolute;
+    z-index: 3;
+    right: 5px;
+    bottom: 0;
+    transform: scale(0.48);
+    transform-origin: bottom right;
+  }
+
+  .hero-flower2 {
+    position: absolute;
+    z-index: 3;
+    right: 280px;
+    bottom: 0;
+    transform: scale(0.48);
+    transform-origin: bottom right;
   }
 
   .hero-zombie-sprite {
-    top: 44px;
     left: 13%;
     width: 38px;
     height: 38px;
+    transform: rotate(-8deg);
+    image-rendering: pixelated;
+    position: absolute;
+    z-index: 2;
+    bottom: 60px;
+
+
+    &--2 {
+      bottom: 50px;
+      right: 0;
+      left: auto;
+      transform: rotateY(180deg) rotateZ(-20deg);
+    }
   }
 
   .stage-tag {

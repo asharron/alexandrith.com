@@ -311,7 +311,6 @@ const IndexPage: React.FC<PageProps> = () => {
                     </a>
                     <nav className="main-nav" aria-label="Main navigation">
                         <a href="#projects">Projects</a>
-                        <a href="#about">About</a>
                         <a href="#technologies">Stack</a>
                         <a href="#past-companies">Experience</a>
                         <a href="#contact">Contact</a>
@@ -332,13 +331,6 @@ const IndexPage: React.FC<PageProps> = () => {
                                 aria-hidden="true">↓</span></a>
                             <a className="button button-secondary" href="/resume.pdf" target="_blank"
                                rel="noopener noreferrer">My résumé <span aria-hidden="true">↗</span></a>
-                        </div>
-                        <div className="hero-footnote">
-                            <span>IN MY INVENTORY</span>
-                            <img src={wateringCanSprite} alt=""/>
-                            <img src={tomatoSeedSprite} alt=""/>
-                            <img src={watermelonSeedSprite} alt=""/>
-                            <span>ideas, games &amp; tools</span>
                         </div>
                     </div>
 
@@ -374,78 +366,11 @@ const IndexPage: React.FC<PageProps> = () => {
                     </div>
                 </section>
 
-                <div className="marquee" aria-hidden="true">
-                    <div>GAMES <span>✳</span> SYSTEMS <span>✳</span> PIXEL ART <span>✳</span> EXPERIMENTS <span>✳</span> GAMES <span>✳</span> SYSTEMS <span>✳</span> PIXEL ART <span>✳</span> EXPERIMENTS <span>✳</span></div>
-                </div>
-
-                <section className="projects-section" id="projects" aria-labelledby="projects-title">
-                    <div className="section-heading">
-                        <div><p className="section-kicker">THE PROJECT ARCADE <span>✳</span></p>
-                            <h2 id="projects-title">A few of my<em> pet projects</em></h2></div>
-                        <p className="section-note">Personal projects &amp; prototypes</p>
-                    </div>
-                    <div className="project-grid">
-                        {projects.map((project, index) => (
-                            <article className={`project-card project-card-${project.slug}`} key={project.slug}>
-                                <div className="project-card-top"><span>PROJECT / {String(index + 1).padStart(2, "0")}</span><span>✳</span></div>
-                                <div className="project-media">
-                                    {project.images.map((image, imageIndex) => (
-                                        <img key={imageIndex} src={image} alt={`${project.name} gameplay preview`}
-                                             loading="lazy"/>
-                                    ))}
-                                    {project.videos.map((video, videoIndex) => (
-                                        <video key={videoIndex} src={video} controls muted loop playsInline
-                                               preload="metadata" aria-label={`${project.name} demo ${videoIndex + 1}`}/>
-                                    ))}
-                                    {project.slug === "gogame" && <div className="farm-sprites" aria-hidden="true">
-                                        <img src={wateringCanSprite} alt=""/>
-                                        <img src={tomatoSeedSprite} alt=""/>
-                                        <img src={watermelonSeedSprite} alt=""/>
-                                    </div>}
-                                    {project.slug === "mech-game" && <PixelSprite src={blenderSpinSheet} frames={4}
-                                        label="Spinning Blender icon" className="project-blender-sprite"/>}
-                                </div>
-                                <div className="project-info">
-                                    <p className="project-slug">/{project.slug}</p>
-                                    <h3>{project.name}</h3>
-                                    <p className="project-description">{project.description}</p>
-                                    <ul className="tag-list" aria-label={`${project.name} technology stack`}>
-                                        {project.stack.map((technology) => <li key={technology}>{technology}</li>)}
-                                    </ul>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                </section>
-
-                <section className="about-section" id="about" aria-labelledby="about-title">
-                    <div className="about-copy">
-                        <p className="section-kicker">A LITTLE ABOUT ME <span>✳</span></p>
-                        <h2 id="about-title">Curiosity is my<br/><em>favorite tool.</em></h2>
-                        <p>I’m drawn to the whole process of making things: shaping an idea, building the systems behind it, and adding the details that make a world feel alive. Lately that means games, graphics, and small experiments that grow into something playable.</p>
-                        <a className="text-link" href="https://linkedin.com/in/alexandrith" target="_blank"
-                           rel="noopener noreferrer">More about me on LinkedIn <span aria-hidden="true">↗</span></a>
-                    </div>
-                    <div className="about-art" aria-label="A collection of game development pixel art">
-                        <div className="about-art-label">CURRENT LOADOUT <span>04 ITEMS</span></div>
-                        <div className="loadout-grid">
-                            <div><img src={wateringCanSprite} alt=""/><span>GROW</span></div>
-                            <div><img src={tomatoSeedSprite} alt=""/><span>PLANT</span></div>
-                            <div><img src={watermelonSeedSprite} alt=""/><span>PLAY</span></div>
-                            <div><PixelSprite src={grassIdleSheet} frames={2} label="Animated grass"
-                                              frameSize={48}/><span>REPEAT</span></div>
-                        </div>
-                        <div className="about-art-bottom"><PixelSprite src={pixelFireSheet} frames={4}
-                            label="Animated pixel fire" frameSize={54}/><span>MADE WITH<br/>A LITTLE MAGIC</span><img
-                            src={flowerSprite} alt=""/></div>
-                    </div>
-                </section>
-
                 <div className="portfolio-details" aria-label="Technologies and experience">
                     <section className="portfolio-detail-card technologies-card" id="technologies"
                              aria-labelledby="technologies-title">
                         <div className="detail-card-heading">
-                            <div><p className="section-kicker">THE TOOLKIT <span>✳</span></p>
+                            <div><p className="section-kicker">MY TOOLKIT <span>✳</span></p>
                                 <h2 id="technologies-title">Technologies</h2>
                                 <p className="detail-card-description">Languages and frameworks I've used on different teams.</p></div>
                             <span className="detail-card-index">01 / 04</span>
@@ -494,7 +419,7 @@ const IndexPage: React.FC<PageProps> = () => {
                         <div className="detail-card-heading">
                             <div><p className="section-kicker">WORKED WITH <span>✳</span></p>
                                 <h2 id="past-clients-title">Past clients</h2>
-                                <p className="detail-card-description">These are clients I've worked with during my roles at other employers</p></div>
+                                <p className="detail-card-description">These are clients I've worked with during my roles at other employers.</p></div>
                             <span className="detail-card-index">04 / 04</span>
                         </div>
                         <ul className="client-list">
@@ -502,6 +427,39 @@ const IndexPage: React.FC<PageProps> = () => {
                         </ul>
                     </section>
                 </div>
+
+                <section className="projects-section" id="projects" aria-labelledby="projects-title">
+                    <div className="section-heading">
+                        <div><p className="section-kicker">THE PROJECT ARCADE <span>✳</span></p>
+                            <h2 id="projects-title">A few of my<em> pet projects</em></h2></div>
+                        <p className="section-note">Personal projects &amp; prototypes</p>
+                    </div>
+                    <div className="project-grid">
+                        {projects.map((project, index) => (
+                            <article className={`project-card project-card-${project.slug}`} key={project.slug}>
+                                <div className="project-card-top"><span>PROJECT / {String(index + 1).padStart(2, "0")}</span><span>✳</span></div>
+                                <div className="project-media">
+                                    {project.images.map((image, imageIndex) => (
+                                        <img key={imageIndex} src={image} alt={`${project.name} gameplay preview`}
+                                             loading="lazy"/>
+                                    ))}
+                                    {project.videos.map((video, videoIndex) => (
+                                        <video key={videoIndex} src={video} controls muted loop playsInline
+                                               preload="metadata" aria-label={`${project.name} demo ${videoIndex + 1}`}/>
+                                    ))}
+                                </div>
+                                <div className="project-info">
+                                    <p className="project-slug">/{project.slug}</p>
+                                    <h3>{project.name}</h3>
+                                    <p className="project-description">{project.description}</p>
+                                    <ul className="tag-list" aria-label={`${project.name} technology stack`}>
+                                        {project.stack.map((technology) => <li key={technology}>{technology}</li>)}
+                                    </ul>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                </section>
 
                 <section className="contact-section" id="contact" aria-labelledby="contact-title">
                     <div className="contact-pixel" aria-hidden="true"><PixelSprite src={playerIdleSheet} frames={4}

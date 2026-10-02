@@ -323,8 +323,14 @@ const IndexPage: React.FC<PageProps> = () => {
                         <a href="#past-companies">Experience</a>
                         <a href="#contact">Contact</a>
                     </nav>
-                    <a className="header-link" href="https://github.com/asharron" target="_blank"
-                       rel="noopener noreferrer">GITHUB <span aria-hidden="true">↗</span></a>
+                    <div className={"header-links"}>
+                        <a className="header-link" href="https://github.com/asharron" target="_blank"
+                           rel="noopener noreferrer">GITHUB <span aria-hidden="true">↗</span></a>
+                        <a className="header-link" href="https://linkedin.com/in/alexandrith" target="_blank"
+                           rel="noopener noreferrer">LINKEDIN <span aria-hidden="true">↗</span></a>
+                        <a className="header-link" href="/resume.pdf" target="_blank"
+                           rel="noopener noreferrer">RÉSUMÉ <span aria-hidden="true">↗</span></a>
+                    </div>
                 </header>
 
                 <section className="hero" aria-labelledby="portfolio-title">

@@ -353,7 +353,7 @@ const IndexPage: React.FC<PageProps> = () => {
                         <div className="art-topline"><span>FIG. 01</span><span>✳ 2026—∞</span></div>
                         <div className="hero-stage">
                             <div className="stage-sparkle stage-sparkle-one" aria-hidden="true">✦</div>
-                            <div className="stage-sparkle stage-sparkle-two" aria-hidden="true">✳</div>
+                            <div className="stage-sparkle stage-sparkle-two" aria-hidden="true">✦</div>
                             <div className="hero-player-walker">
                                 <PixelSprite src={playerWalkingSheet} frames={4} label="Walking player character"
                                              className="hero-player"/>

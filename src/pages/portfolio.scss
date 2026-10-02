@@ -753,7 +753,15 @@ a:focus-visible {
 
 .project-description {
   min-height: 62px;
-  margin: 10px 0 14px;
+  margin: 10px 0 0;
+  color: var(--color-muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.project-subdescription {
+  min-height: 62px;
+  margin: 0 0 14px;
   color: var(--color-muted);
   font-size: 11px;
   line-height: 1.7;

@@ -335,11 +335,8 @@ const IndexPage: React.FC<PageProps> = () => {
 
                 <section className="hero" aria-labelledby="portfolio-title">
                     <div className="hero-copy">
-                        <p className="hero-kicker"><span/> WEB / SOFTWARE / GAMES / PIXEL ART</p>
-                        <h1 id="portfolio-title">Building<br/>Software With <em>Passion</em><span
-                            className="title-star">✳</span></h1>
                         <p className="hero-intro">Hi, I’m Alexandrith. I'm a full stack software developer with experience
-                            in Java and React. I love web technology, but I also love to make games in my free time to strengthen my programming skills!</p>
+                            in Java and React. I have over 8 years of working with web professionally. In my free time, I tackle projects to grow my design and engineering skills.</p>
                         <img src={headshot} alt="profile headshot" className={'headshot'}/>
                         <div className="hero-actions">
                             <a className="button button-primary" href="#projects">Explore projects <span
